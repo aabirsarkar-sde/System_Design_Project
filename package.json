@@ -1,0 +1,16 @@
+{
+  "name": "campus-service-management-system",
+  "version": "1.0.0",
+  "description": "Backend starter for a Campus Service Management System (TypeScript)",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "ts-node src/main.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  }
+}
