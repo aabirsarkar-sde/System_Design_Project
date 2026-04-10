@@ -1,5 +1,5 @@
 import { RequestService } from "../interfaces/RequestService";
-import { ServiceRequest } from "../models/ServiceRequest";
+import { ServiceRequest, ServiceRequestInput, ServiceRequestStatus } from "../models/ServiceRequest";
 import { User } from "../models/User";
 import { RequestRepository } from "../repositories/RequestRepository";
 
@@ -17,13 +17,13 @@ export class RequestController {
     this.requestRepository = requestRepository;
   }
 
-  createRequest(user: User): ServiceRequest {
-    const request = this.requestService.createRequest(user);
+  createRequest(user: User, input: ServiceRequestInput): ServiceRequest {
+    const request = this.requestService.createRequest(user, input);
     this.requestRepository.save(request);
     return request;
   }
 
-  updateRequestStatus(request: ServiceRequest, newStatus: string): void {
+  updateRequestStatus(request: ServiceRequest, newStatus: ServiceRequestStatus): void {
     this.requestService.updateRequestStatus(request, newStatus);
   }
 }

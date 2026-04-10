@@ -13,4 +13,12 @@ export class RequestRepository {
   findById(requestId: string): ServiceRequest | undefined {
     return this.requests.get(requestId);
   }
+
+  findAll(): ServiceRequest[] {
+    return Array.from(this.requests.values());
+  }
+
+  findByUserId(userId: string): ServiceRequest[] {
+    return this.findAll().filter((request) => request.userId === userId);
+  }
 }

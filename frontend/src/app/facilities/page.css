@@ -1,0 +1,45 @@
+.fac-container {
+  padding: 2.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.fac-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.fac-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.fac-card:hover {
+  background-color: var(--bg-card-hover);
+  box-shadow: 0 15px 30px -5px rgba(0,0,0,0.4);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.fac-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.fac-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.pt-4 { padding-top: 1rem; }
+.pt-6 { padding-top: 1.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+.text-success { color: var(--success); }

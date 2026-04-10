@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { NotificationService } from "../interfaces/NotificationService";
 import { RequestService } from "../interfaces/RequestService";
-import { ServiceRequest } from "../models/ServiceRequest";
+import { ServiceRequest, ServiceRequestInput, ServiceRequestStatus } from "../models/ServiceRequest";
 import { User } from "../models/User";
 
 /**
@@ -21,8 +21,10 @@ export class RequestServiceImpl implements RequestService {
     this.notificationService = notificationService;
   }
 
-  createRequest(user: User): ServiceRequest {
-    const request = ServiceRequest.createRequest(randomUUID(), user);
+  createRequest(user: User, input: ServiceRequestInput): ServiceRequest {
+    const requestId = randomUUID();
+    const ticketCode = `TK-${requestId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
+    const request = ServiceRequest.createRequest(requestId, user, input, ticketCode);
     // Attach the notification observer so the user gets
     // pinged whenever the status changes.
     request.attachObserver(this.notificationService);
@@ -30,7 +32,7 @@ export class RequestServiceImpl implements RequestService {
     return request;
   }
 
-  updateRequestStatus(request: ServiceRequest, newStatus: string): void {
+  updateRequestStatus(request: ServiceRequest, newStatus: ServiceRequestStatus): void {
     request.updateStatus(newStatus); // triggers notifyObservers internally
   }
 }

@@ -1,0 +1,66 @@
+.requests-container {
+  padding: 2.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 1.5rem;
+  height: calc(100vh - 200px);
+}
+
+.kanban-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.kanban-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.kanban-card {
+  padding: 1.25rem;
+  cursor: grab;
+  border-radius: var(--radius-md);
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+}
+
+.kanban-card::after {
+  border-radius: inherit;
+}
+
+.kanban-card:hover {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.34);
+  border-color: var(--border-color);
+  background-color: var(--bg-card-hover);
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.border-blue {
+  border-left: 3px solid var(--primary-blue);
+}
+
+.text-success { color: var(--success); }
+.border2 { border-width: 2px; }
+.border-dashed { border-style: dashed; }

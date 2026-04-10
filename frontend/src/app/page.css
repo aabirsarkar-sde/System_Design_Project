@@ -1,0 +1,320 @@
+.dashboard-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem clamp(1rem, 2vw, 2.25rem);
+  min-height: calc(100vh - 72px);
+}
+
+.dashboard-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-sidebar {
+  width: min(360px, 32vw);
+}
+
+.welcome-title {
+  font-size: clamp(1.8rem, 2.6vw, 2.35rem);
+  font-weight: 700;
+  margin-bottom: 0.55rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.welcome-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+  line-height: 1.6;
+}
+
+.stat-card {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  min-width: 138px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-label {
+  font-size: 0.69rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  margin-bottom: 0.3rem;
+}
+
+.stat-value {
+  font-size: 1.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  border-left: 3px solid var(--primary-blue);
+  padding-left: 0.75rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.mb-8 { margin-bottom: 2rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-0 { margin-bottom: 0; }
+
+.quick-launch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.quick-launch-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: left;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 180ms ease;
+  cursor: pointer;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+.quick-launch-card:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--border-color-hover);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.48);
+}
+
+.ticket-card {
+  border-color: rgba(110, 208, 255, 0.36);
+  box-shadow: 0 14px 30px rgba(56, 189, 248, 0.2);
+}
+
+.ticket-card:hover {
+  box-shadow: 0 18px 34px rgba(56, 189, 248, 0.32);
+  border-color: rgba(125, 211, 252, 0.6);
+}
+
+.ql-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.ql-icon.bg-blue-muted {
+  background-color: var(--primary-blue-faded);
+}
+
+.ql-icon.bg-blue {
+  background-color: var(--primary-blue-button);
+}
+
+.ql-icon.text-orange {
+  color: var(--warning);
+  background-color: var(--primary-blue-faded);
+}
+
+.ql-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.ql-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-top: auto;
+}
+
+.requests-list {
+  padding: 0;
+}
+
+.request-row {
+  padding: 1.2rem 1.35rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 180ms ease;
+}
+
+.request-row:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.request-row.border-none {
+  border-bottom: none;
+}
+
+.req-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.req-icon.in-progress,
+.req-icon.blue {
+  background-color: var(--primary-blue-faded);
+  color: var(--primary-blue);
+}
+
+.req-icon.pending,
+.req-icon.orange {
+  background-color: rgba(245, 158, 11, 0.16);
+  color: #f59e0b;
+}
+
+.req-icon.dispatched {
+  background-color: rgba(168, 85, 247, 0.16);
+  color: #c084fc;
+}
+
+.req-icon.resolved,
+.req-icon.gray {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #86efac;
+}
+
+.req-title {
+  font-size: 0.94rem;
+  font-weight: 600;
+  margin-bottom: 0.28rem;
+}
+
+.req-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.badge-gray {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+}
+
+/* Campus Pulse */
+.pulse-image-card {
+  border: 1px solid var(--border-color);
+}
+
+.pulse-image {
+  height: 170px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.pulse-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.12));
+}
+
+.pulse-badge {
+  position: absolute;
+  z-index: 1;
+  bottom: 1rem;
+  left: 1rem;
+  background-color: rgba(0, 0, 0, 0.64);
+  border: 1px solid rgba(56, 189, 248, 0.34);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.pulse-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+  color: var(--text-primary);
+}
+
+.pulse-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.pulse-card {
+  transition: transform 220ms ease, background-color 180ms ease, box-shadow 220ms ease;
+}
+
+.pulse-card:hover {
+  background-color: var(--bg-card-hover);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+}
+
+.pulse-card.warning {
+  border-left: 3px solid var(--warning);
+}
+
+.pulse-icon {
+  color: var(--text-secondary);
+}
+
+.pulse-icon.orange {
+  color: var(--warning);
+}
+
+@media (max-width: 1320px) {
+  .quick-launch-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-sidebar {
+    width: min(320px, 34vw);
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+  }
+
+  .welcome-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .dashboard-container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .quick-launch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-subtitle br {
+    display: none;
+  }
+
+  .request-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .stat-card {
+    min-width: 118px;
+  }
+}
