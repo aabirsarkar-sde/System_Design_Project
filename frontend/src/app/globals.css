@@ -104,6 +104,30 @@ textarea {
   overflow: hidden;
 }
 
+.ambient-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -24%;
+  background:
+    radial-gradient(circle at 22% 24%, rgba(125, 211, 252, 0.34), transparent 40%),
+    radial-gradient(circle at 78% 72%, rgba(56, 189, 248, 0.24), transparent 42%);
+  mix-blend-mode: screen;
+  opacity: 0.28;
+  animation: backdropSpotlight 18s ease-in-out infinite alternate;
+}
+
+.ambient-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: -40% -20%;
+  background:
+    linear-gradient(112deg, transparent 24%, rgba(255, 255, 255, 0.08) 42%, transparent 58%),
+    linear-gradient(72deg, transparent 34%, rgba(56, 189, 248, 0.12) 48%, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0.12;
+  animation: backdropBeam 24s linear infinite;
+}
+
 .ambient-blob {
   position: absolute;
   border-radius: 999px;
@@ -143,12 +167,49 @@ textarea {
   position: absolute;
   inset: -30% -18%;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.11) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.11) 1px, transparent 1px);
-  background-size: 70px 70px;
-  opacity: 0.11;
-  mask-image: radial-gradient(circle at center, black 34%, transparent 78%);
-  animation: none;
+    linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+    radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.4) 0.9px, transparent 1.3px),
+    radial-gradient(circle at center, rgba(125, 211, 252, 0.16), transparent 62%);
+  background-size: 64px 64px, 64px 64px, 64px 64px, 100% 100%;
+  background-position: 0 0, 0 0, 32px 32px, 0 0;
+  opacity: 0.18;
+  mask-image: radial-gradient(circle at center, black 44%, transparent 84%);
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 14px rgba(125, 211, 252, 0.2));
+  overflow: hidden;
+  animation: gridShift 38s linear infinite alternate, gridPulse 9s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.ambient-grid::before {
+  content: "";
+  position: absolute;
+  inset: -36%;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(125, 211, 252, 0.02) 28deg,
+    rgba(125, 211, 252, 0.24) 56deg,
+    rgba(255, 255, 255, 0.2) 70deg,
+    rgba(125, 211, 252, 0.04) 92deg,
+    transparent 126deg
+  );
+  opacity: 0.16;
+  mix-blend-mode: screen;
+  animation: gridSweep 16s linear infinite;
+}
+
+.ambient-grid::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 24% 36%, rgba(125, 211, 252, 0.28), transparent 55%),
+    radial-gradient(circle at 72% 66%, rgba(56, 189, 248, 0.2), transparent 58%),
+    radial-gradient(circle at 45% 72%, rgba(255, 255, 255, 0.14), transparent 52%);
+  opacity: 0.2;
+  animation: gridGlow 16s ease-in-out infinite;
 }
 
 /* Base layout */
@@ -662,8 +723,90 @@ textarea {
 }
 
 @keyframes gridShift {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(50px, 45px, 0); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-34px, -22px, 0) scale(1.02);
+  }
+
+  100% {
+    transform: translate3d(32px, 24px, 0) scale(1);
+  }
+}
+
+@keyframes backdropSpotlight {
+  0% {
+    transform: translate3d(-4vw, -3vh, 0) scale(1);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: translate3d(3vw, 2vh, 0) scale(1.08);
+    opacity: 0.32;
+  }
+
+  100% {
+    transform: translate3d(5vw, -1vh, 0) scale(1.02);
+    opacity: 0.24;
+  }
+}
+
+@keyframes backdropBeam {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.08;
+  }
+
+  50% {
+    opacity: 0.16;
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1.08);
+    opacity: 0.08;
+  }
+}
+
+@keyframes gridPulse {
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+
+  50% {
+    opacity: 0.26;
+  }
+}
+
+@keyframes gridGlow {
+  0%,
+  100% {
+    opacity: 0.14;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.28;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes gridSweep {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.08;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1.04);
+    opacity: 0.08;
+  }
 }
 
 .animate-fade-in {
@@ -746,8 +889,29 @@ textarea {
   }
 
   .ambient-grid {
-    background-size: 54px 54px;
+    background-size: 54px 54px, 54px 54px, 54px 54px, 100% 100%;
     opacity: 0.16;
+    animation-duration: 52s, 11s;
+  }
+
+  .ambient-backdrop::before {
+    opacity: 0.22;
+    animation-duration: 24s;
+  }
+
+  .ambient-backdrop::after {
+    opacity: 0.08;
+    animation-duration: 30s;
+  }
+
+  .ambient-grid::before {
+    opacity: 0.11;
+    animation-duration: 20s;
+  }
+
+  .ambient-grid::after {
+    opacity: 0.12;
+    animation-duration: 20s;
   }
 }
 
