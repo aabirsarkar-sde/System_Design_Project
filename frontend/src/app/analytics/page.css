@@ -100,3 +100,43 @@
 
 .line-height-relaxed { line-height: 1.6; }
 .hover\:-translate-y-1:hover { transform: translateY(-2px); }
+
+@media (max-width: 1200px) {
+  .analytics-container {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .analytics-container {
+    padding: 1rem;
+  }
+
+  .analytics-container .grid-cols-3,
+  .analytics-container .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-container .col-span-2 {
+    grid-column: auto;
+  }
+
+  .mock-graph-container {
+    height: 10.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .chart-bars {
+    gap: 0.35rem;
+  }
+
+  .bar {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .data-point {
+    width: 9px;
+    height: 9px;
+  }
+}

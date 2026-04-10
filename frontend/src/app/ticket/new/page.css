@@ -305,3 +305,100 @@
 .text-shadow {
   text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
+
+@media (max-width: 1200px) {
+  .ticket-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .ticket-content {
+    flex-direction: column;
+  }
+
+  .ticket-side-col {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .progress-container {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .progress-line {
+    left: 8%;
+    right: 8%;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ticket-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .ticket-actions > .flex {
+    width: 100%;
+  }
+
+  .ticket-actions > .flex .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .ticket-container {
+    padding: 1rem;
+  }
+
+  .ticket-feedback {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ticket-feedback-link {
+    white-space: normal;
+  }
+
+  .progress-steps {
+    gap: 0.4rem;
+  }
+
+  .step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.78rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .location-details .flex.gap-4 {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card .flex.gap-6 {
+    flex-wrap: wrap;
+    gap: 0.9rem 1.2rem;
+  }
+
+  .upload-zone {
+    padding: 1.4rem 1rem;
+  }
+
+  .guidelines-list {
+    padding-left: 1rem;
+  }
+}

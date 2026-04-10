@@ -43,3 +43,33 @@
 .pt-6 { padding-top: 1.5rem; }
 .mr-2 { margin-right: 0.5rem; }
 .text-success { color: var(--success); }
+
+@media (max-width: 1200px) {
+  .fac-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .fac-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .fac-container {
+    padding: 1rem;
+  }
+
+  .fac-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .fac-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .fac-icon {
+    width: 44px;
+    height: 44px;
+  }
+}

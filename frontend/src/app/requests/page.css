@@ -64,3 +64,69 @@
 .text-success { color: var(--success); }
 .border2 { border-width: 2px; }
 .border-dashed { border-style: dashed; }
+
+@media (max-width: 1280px) {
+  .requests-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .kanban-board {
+    height: auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(280px, 1fr));
+    align-items: start;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+  }
+
+  .kanban-col {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 960px) {
+  .requests-container {
+    padding: 1rem;
+  }
+
+  .requests-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .requests-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .kanban-board {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    gap: 1rem;
+    padding-bottom: 0;
+  }
+
+  .kanban-col {
+    min-height: 0;
+    padding: 0.9rem;
+  }
+
+  .kanban-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .kanban-cards {
+    overflow: visible;
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .kanban-card {
+    padding: 1rem;
+  }
+}

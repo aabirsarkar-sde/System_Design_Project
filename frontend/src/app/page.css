@@ -318,3 +318,34 @@
     min-width: 118px;
   }
 }
+
+@media (max-width: 560px) {
+  .welcome-title {
+    font-size: clamp(1.45rem, 7vw, 1.8rem);
+  }
+
+  .welcome-section > .flex.gap-4 {
+    width: 100%;
+  }
+
+  .welcome-section > .flex.gap-4 .stat-card {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .request-row {
+    padding: 1rem;
+  }
+
+  .request-row > .flex {
+    width: 100%;
+  }
+
+  .request-row .badge {
+    align-self: flex-start;
+  }
+
+  .pulse-image {
+    height: 150px;
+  }
+}

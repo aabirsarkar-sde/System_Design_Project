@@ -79,7 +79,7 @@ export default async function RequestsPage() {
 
   return (
     <main className="requests-container animate-fade-in">
-      <div className="flex justify-between items-end mb-8 animate-slide-up delay-100">
+      <div className="requests-header flex justify-between items-end mb-8 animate-slide-up delay-100">
         <div>
           <h2 className="text-2xl font-bold mb-1">Service Requests</h2>
           <p className="text-sm text-secondary">Manage and track your active support tickets.</p>

@@ -208,3 +208,40 @@
     height: 2rem;
   }
 }
+
+@media (max-width: 520px) {
+  .header-left {
+    min-width: 0;
+  }
+
+  .search-bar {
+    padding: 0.5rem 0.72rem;
+  }
+
+  .header-right {
+    justify-content: flex-start;
+  }
+
+  .user-profile {
+    margin-left: auto;
+  }
+
+  .api-status {
+    padding: 0.28rem 0.52rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .api-status span:last-child {
+    display: none;
+  }
+
+  .header-right .btn {
+    font-size: 0.76rem;
+    padding: 0.55rem 0.8rem;
+  }
+
+  .notification-count {
+    right: -4px;
+  }
+}

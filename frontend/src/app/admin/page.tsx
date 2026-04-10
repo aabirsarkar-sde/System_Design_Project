@@ -247,7 +247,7 @@ export default async function AdminDashboard() {
         </div>
       </section>
 
-      <div className="flex gap-6">
+      <div className="admin-bottom-grid flex gap-6">
         <section className="card flex-1">
            <h3 className="font-semibold text-primary mb-6">Field Units Status</h3>
 
