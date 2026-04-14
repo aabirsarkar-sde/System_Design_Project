@@ -1,0 +1,232 @@
+.admin-container {
+  padding: 2.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.stat-card-lg {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-icon-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-danger-muted { background-color: var(--primary-blue-faded); }
+.text-danger { color: var(--danger); }
+.border-danger { border-color: rgba(56, 189, 248, 0.28); }
+
+.bg-orange-muted { background-color: var(--primary-blue-faded); }
+.text-orange { color: var(--warning); }
+.border-orange { border-color: rgba(56, 189, 248, 0.28); }
+
+/* Table Tabs */
+.filter-tabs {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: var(--text-primary);
+}
+
+.tab.active {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+/* Dispatch Table */
+.dispatch-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dispatch-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+.dispatch-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.dispatch-table tr.border-none td {
+  border-bottom: none;
+}
+
+.dispatch-table tr:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.assigned-avatar {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--bg-card);
+}
+
+.z-1 { z-index: 1; }
+.z-2 { z-index: 2; }
+.-ml-2 { margin-left: -0.5rem; }
+
+/* Pagination */
+.pg-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.pg-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.pg-btn.active {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Bottom Widgets */
+.flex-2 { flex: 2; }
+
+.progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.bg-primary { background-color: var(--primary-blue-button); }
+.bg-orange { background-color: var(--warning); }
+.bg-darkgray { background-color: #4b5563; }
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.event-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.dispatch-table {
+  min-width: 980px;
+}
+
+@media (max-width: 1200px) {
+  .admin-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .dispatch-table th,
+  .dispatch-table td {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-container {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .admin-bottom-grid {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .stat-card-lg {
+    padding: 1.1rem;
+  }
+
+  .dispatch-table {
+    min-width: 760px;
+  }
+
+  .dispatch-table th {
+    font-size: 0.68rem;
+  }
+
+  .event-item {
+    gap: 0.7rem;
+  }
+}

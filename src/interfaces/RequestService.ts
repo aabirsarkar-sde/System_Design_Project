@@ -1,4 +1,4 @@
-import { ServiceRequest } from "../models/ServiceRequest";
+import { ServiceRequest, ServiceRequestInput, ServiceRequestStatus } from "../models/ServiceRequest";
 import { User } from "../models/User";
 
 /**
@@ -7,6 +7,6 @@ import { User } from "../models/User";
  * Interface Segregation + Dependency Inversion principles.
  */
 export interface RequestService {
-  createRequest(user: User): ServiceRequest;
-  updateRequestStatus(request: ServiceRequest, newStatus: string): void;
+  createRequest(user: User, input: ServiceRequestInput): ServiceRequest;
+  updateRequestStatus(request: ServiceRequest, newStatus: ServiceRequestStatus): void;
 }

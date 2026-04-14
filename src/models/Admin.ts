@@ -1,13 +1,13 @@
 import { User } from "./User";
-import { ServiceRequest } from "./ServiceRequest";
+import { ServiceRequest, ServiceRequestStatus } from "./ServiceRequest";
 
 /**
  * Admin extends User — INHERITANCE.
  * Has extra responsibilities for managing service requests.
  */
 export class Admin extends User {
-  constructor(userId: string, name: string, email: string) {
-    super(userId, name, email, "ADMIN");
+  constructor(userId: string, name: string, email: string, avatarUrl: string) {
+    super(userId, name, email, "ADMIN", avatarUrl);
   }
 
   /**
@@ -22,7 +22,7 @@ export class Admin extends User {
    * Updates a request status. Delegates to the ServiceRequest model
    * so its observers (Observer pattern) get notified.
    */
-  updateRequestStatus(request: ServiceRequest, newStatus: string): void {
+  updateRequestStatus(request: ServiceRequest, newStatus: ServiceRequestStatus): void {
     console.log(`Admin ${this._name} updating request ${request.requestId} -> ${newStatus}`);
     request.updateStatus(newStatus);
   }

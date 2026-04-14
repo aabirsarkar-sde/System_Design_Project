@@ -15,4 +15,8 @@ export class UserRepository {
   findById(userId: string): User | undefined {
     return this.users.get(userId);
   }
+
+  findAll(): User[] {
+    return Array.from(this.users.values());
+  }
 }
