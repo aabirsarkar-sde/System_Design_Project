@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  House,
   LayoutDashboard,
   Ticket,
   Building2,
@@ -24,9 +25,15 @@ export default function Sidebar() {
       <nav className="sidebar-nav">
         <ul>
           <li>
-            <Link href="/admin" className={`nav-item ${pathname === '/admin' || pathname === '/' ? 'active' : ''}`}>
+            <Link href="/" className={`nav-item ${pathname === '/' ? 'active' : ''}`}>
+              <House size={20} />
+              <span>Resident</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin" className={`nav-item ${pathname === '/admin' ? 'active' : ''}`}>
               <LayoutDashboard size={20} />
-              <span>Dashboard</span>
+              <span>Admin</span>
             </Link>
           </li>
           <li>

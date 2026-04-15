@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Building, MapPin, LayoutDashboard, ShieldCheck, Video } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api/server';
+import { requireSession } from '@/lib/auth/session';
 import type { FacilitiesResponse, FacilityItem } from '@/lib/api/types';
 import './page.css';
 
@@ -59,6 +60,7 @@ async function getFacilities(): Promise<FacilitiesResponse | null> {
 }
 
 export default async function FacilitiesPage() {
+   await requireSession();
    const facilitiesResponse = await getFacilities();
 
    if (!facilitiesResponse) {

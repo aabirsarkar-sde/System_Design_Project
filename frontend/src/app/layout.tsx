@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Manrope, Space_Grotesk } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { getSiteBaseUrl } from "@/lib/env";
 import "./globals.css";
 
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
 const siteBaseUrl = getSiteBaseUrl();
 
 export const metadata: Metadata = {
@@ -48,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.className} ${manrope.variable} ${spaceGrotesk.variable}`}>
+      <body>
         <div className="ambient-backdrop" aria-hidden="true">
           <div className="ambient-blob ambient-blob-one" />
           <div className="ambient-blob ambient-blob-two" />

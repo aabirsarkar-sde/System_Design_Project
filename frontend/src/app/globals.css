@@ -35,6 +35,8 @@
   --shadow-sm: 0 10px 24px rgba(0, 0, 0, 0.45);
   --shadow-md: 0 22px 48px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 24px 56px rgba(56, 189, 248, 0.22);
+  --font-sans: "Avenir Next", "Segoe UI Variable", "Segoe UI", sans-serif;
+  --font-display: "Arial Narrow", "Avenir Next Condensed", "Franklin Gothic Medium", sans-serif;
 }
 
 *,

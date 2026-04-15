@@ -13,7 +13,7 @@ import {
   Zap
 } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api/server';
-import { DEFAULT_USER_ID } from '@/lib/constants';
+import { requireSession } from '@/lib/auth/session';
 import type {
   ResidentCampusPulse,
   ResidentDashboardResponse,
@@ -58,6 +58,8 @@ function statusBadge(status: string) {
       return { badgeClass: 'badge badge-status-dispatched', dotClass: 'status-dot dispatched' };
     case 'IN_PROGRESS':
       return { badgeClass: 'badge badge-status-in-progress', dotClass: 'status-dot in-progress' };
+    case 'SCHEDULED':
+      return { badgeClass: 'badge badge-status-dispatched', dotClass: 'status-dot dispatched' };
     case 'RESOLVED':
       return { badgeClass: 'badge badge-status-resolved', dotClass: 'status-dot resolved' };
     default:
@@ -74,6 +76,9 @@ function requestIconClass(status: string): string {
     return 'req-icon pending';
   }
   if (status === 'DISPATCHED') {
+    return 'req-icon dispatched';
+  }
+  if (status === 'SCHEDULED') {
     return 'req-icon dispatched';
   }
   if (status === 'IN_PROGRESS') {
@@ -99,10 +104,10 @@ function relativeTimeLabel(isoDate: string): string {
   return `Created ${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
 }
 
-async function getResidentDashboard(): Promise<ResidentDashboardResponse | null> {
+async function getResidentDashboard(userId: string): Promise<ResidentDashboardResponse | null> {
   try {
     return await fetchFromBackend<ResidentDashboardResponse>(
-      `/api/dashboard/resident?userId=${encodeURIComponent(DEFAULT_USER_ID)}`,
+      `/api/dashboard/resident?userId=${encodeURIComponent(userId)}`,
     );
   } catch {
     return null;
@@ -152,7 +157,8 @@ function renderPulseCard(item: ResidentCampusPulse) {
 }
 
 export default async function ResidentDashboard() {
-  const dashboard = await getResidentDashboard();
+  const session = await requireSession();
+  const dashboard = await getResidentDashboard(session.userId);
 
   if (!dashboard) {
     return (
@@ -176,6 +182,10 @@ export default async function ResidentDashboard() {
             <p className="welcome-subtitle">
               Your campus command center is online. You have {dashboard.activeRequests} active <br/> 
               maintenance tickets and {dashboard.upcomingBookings} upcoming facility booking{dashboard.upcomingBookings === 1 ? '' : 's'}.
+              <br />
+              {session.seatNumber && session.classroomNumber
+                ? `Exam seat ${session.seatNumber} in ${session.classroomNumber}.`
+                : 'Your student allocation is synced from the registrar import.'}
             </p>
           </div>
           <div className="flex gap-4">
@@ -203,24 +213,34 @@ export default async function ResidentDashboard() {
             <Link href="/requests" className="text-xs text-secondary font-semibold hover:text-white uppercase tracking-wider">VIEW ALL</Link>
           </div>
           <div className="card requests-list flex-col gap-0 p-0">
-            {dashboard.recentRequests.map((request, index) => {
-              const badge = statusBadge(request.status);
-              const iconClass = requestIconClass(request.status);
-              const rowClass = `request-row flex items-center justify-between ${index === dashboard.recentRequests.length - 1 ? 'border-none' : ''}`;
-
-              return (
-                <div key={request.requestId} className={rowClass}>
-                  <div className="flex items-center gap-4">
-                    <div className={iconClass}>{renderIcon(request.icon, 20)}</div>
-                    <div>
-                      <h5 className="req-title">{request.title}</h5>
-                      <p className="req-meta">Ticket #{request.ticketCode} • {relativeTimeLabel(request.createdAt)}</p>
-                    </div>
-                  </div>
-                  <span className={badge.badgeClass}><span className={badge.dotClass}></span> {statusLabel(request.status)}</span>
+            {dashboard.recentRequests.length === 0 ? (
+              <div className="request-row flex items-center justify-between border-none">
+                <div>
+                  <h5 className="req-title">No requests yet</h5>
+                  <p className="req-meta">Create your first maintenance or support ticket to start tracking it here.</p>
                 </div>
-              );
-            })}
+                <Link href="/ticket/new" className="btn btn-primary">Raise Ticket</Link>
+              </div>
+            ) : (
+              dashboard.recentRequests.map((request, index) => {
+                const badge = statusBadge(request.status);
+                const iconClass = requestIconClass(request.status);
+                const rowClass = `request-row flex items-center justify-between ${index === dashboard.recentRequests.length - 1 ? 'border-none' : ''}`;
+
+                return (
+                  <div key={request.requestId} className={rowClass}>
+                    <div className="flex items-center gap-4">
+                      <div className={iconClass}>{renderIcon(request.icon, 20)}</div>
+                      <div>
+                        <h5 className="req-title">{request.title}</h5>
+                        <p className="req-meta">Ticket #{request.ticketCode} • {relativeTimeLabel(request.createdAt)}</p>
+                      </div>
+                    </div>
+                    <span className={badge.badgeClass}><span className={badge.dotClass}></span> {statusLabel(request.status)}</span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </section>
       </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { TrendingUp, Activity } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api/server';
+import { requireSession } from '@/lib/auth/session';
 import type { AnalyticsResponse } from '@/lib/api/types';
 import './page.css';
 
@@ -30,6 +31,7 @@ function progressClass(index: number): string {
 }
 
 export default async function AnalyticsPage() {
+   await requireSession();
    const analytics = await getAnalytics();
 
    if (!analytics) {

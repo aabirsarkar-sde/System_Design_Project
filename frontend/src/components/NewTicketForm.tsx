@@ -8,9 +8,10 @@ import {
   UploadCloud,
   Info,
   Monitor,
+  Package,
+  Shield,
   Trash2,
 } from 'lucide-react';
-import { DEFAULT_USER_ID } from '@/lib/constants';
 import type {
   CreateRequestResponse,
   TicketFormConfigResponse,
@@ -31,6 +32,12 @@ function categoryIcon(code: string) {
   }
   if (code === 'IT_SUPPORT') {
     return <Monitor size={24} />;
+  }
+  if (code === 'SECURITY') {
+    return <Shield size={24} />;
+  }
+  if (code === 'SUPPLIES') {
+    return <Package size={24} />;
   }
 
   return <Trash2 size={24} />;
@@ -83,7 +90,6 @@ export default function NewTicketForm({ config }: NewTicketFormProps) {
 
     try {
       const payload = {
-        userId: DEFAULT_USER_ID,
         title,
         description,
         category,

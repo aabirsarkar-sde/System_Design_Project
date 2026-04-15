@@ -5,11 +5,34 @@ export interface ApiHealthResponse {
 
 export interface HeaderProfileResponse {
   userId: string;
+  enrollmentNumber: string | null;
   name: string;
   email: string;
   role: string;
   avatarUrl: string;
+  seatNumber: number | null;
+  classroomNumber: string | null;
   unreadNotifications: number;
+}
+
+export interface AuthenticatedUser {
+  userId: string;
+  enrollmentNumber: string | null;
+  name: string;
+  email: string;
+  role: string;
+  avatarUrl: string;
+  seatNumber: number | null;
+  classroomNumber: string | null;
+}
+
+export interface LoginRequestPayload {
+  enrollmentNumber: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: AuthenticatedUser;
 }
 
 export interface ResidentQuickLaunchItem {

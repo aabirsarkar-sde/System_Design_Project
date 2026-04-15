@@ -15,6 +15,7 @@ import {
   Users
 } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api/server';
+import { requireSession } from '@/lib/auth/session';
 import type { AdminDashboardResponse, AdminEvent, AdminQueueItem } from '@/lib/api/types';
 import './page.css';
 
@@ -44,6 +45,9 @@ function statusBadge(status: string): { className: string; dotClass: string } {
     return { className: 'badge badge-status-pending', dotClass: 'status-dot pending' };
   }
   if (status === 'DISPATCHED') {
+    return { className: 'badge badge-status-dispatched', dotClass: 'status-dot dispatched' };
+  }
+  if (status === 'SCHEDULED') {
     return { className: 'badge badge-status-dispatched', dotClass: 'status-dot dispatched' };
   }
   if (status === 'IN_PROGRESS') {
@@ -151,6 +155,7 @@ function queueRow(item: AdminQueueItem, isLast: boolean) {
 }
 
 export default async function AdminDashboard() {
+  await requireSession();
   const dashboard = await getAdminDashboard();
 
   if (!dashboard) {

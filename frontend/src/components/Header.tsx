@@ -1,16 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Bell, Settings } from 'lucide-react';
-import { DEFAULT_USER_ID } from '@/lib/constants';
+import { Search, Bell, LogOut } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api/server';
 import type { ApiHealthResponse, HeaderProfileResponse } from '@/lib/api/types';
+import { getSession } from '@/lib/auth/session';
 import './Header.css';
 
-async function getHeaderData(): Promise<{ profile: HeaderProfileResponse | null; health: ApiHealthResponse | null }> {
+async function getHeaderData(
+  userId?: string,
+): Promise<{ profile: HeaderProfileResponse | null; health: ApiHealthResponse | null }> {
   try {
     const [profile, health] = await Promise.all([
-      fetchFromBackend<HeaderProfileResponse>(`/api/header/me?userId=${encodeURIComponent(DEFAULT_USER_ID)}`),
+      userId
+        ? fetchFromBackend<HeaderProfileResponse>(
+            `/api/header/me?userId=${encodeURIComponent(userId)}`,
+          )
+        : Promise.resolve(null),
       fetchFromBackend<ApiHealthResponse>('/api/health'),
     ]);
 
@@ -21,8 +27,11 @@ async function getHeaderData(): Promise<{ profile: HeaderProfileResponse | null;
 }
 
 export default async function Header() {
-  const { profile, health } = await getHeaderData();
+  const session = await getSession();
+  const { profile, health } = await getHeaderData(session?.userId);
+  const activeUser = profile ?? session;
   const isApiOnline = Boolean(health?.ok);
+  const isLoggedIn = Boolean(session);
 
   return (
     <header className="header">
@@ -48,24 +57,35 @@ export default async function Header() {
               <span className="notification-count">{profile.unreadNotifications}</span>
             ) : null}
           </button>
-          <button className="icon-btn">
-            <Settings size={20} />
-          </button>
         </div>
 
-        <Link href="/ticket/new" className="btn btn-primary">
-          New Ticket
-        </Link>
+        {isLoggedIn ? (
+          <>
+            <Link href="/ticket/new" className="btn btn-primary">
+              New Ticket
+            </Link>
+
+            <form action="/api/auth/logout" method="post">
+              <button className="icon-btn" type="submit" aria-label="Sign out">
+                <LogOut size={20} />
+              </button>
+            </form>
+          </>
+        ) : (
+          <Link href="/login" className="btn btn-primary">
+            Sign In
+          </Link>
+        )}
         
         <div className="user-profile flex items-center gap-3 border-l border-border pl-6">
           <div className="user-info text-right">
-            <div className="font-semibold text-sm">{profile?.name ?? 'Unknown User'}</div>
-            <div className="text-xs text-secondary">{profile?.role.replace(/_/g, ' ') ?? 'Offline'}</div>
+            <div className="font-semibold text-sm">{activeUser?.name ?? 'Guest User'}</div>
+            <div className="text-xs text-secondary">{activeUser?.role.replace(/_/g, ' ') ?? 'Sign in required'}</div>
           </div>
           <div className="avatar">
             <Image
-              src={profile?.avatarUrl ?? 'https://i.pravatar.cc/150?u=offline-user'}
-              alt={profile?.name ?? 'User Avatar'}
+              src={activeUser?.avatarUrl ?? 'https://i.pravatar.cc/150?u=offline-user'}
+              alt={activeUser?.name ?? 'User Avatar'}
               width={38}
               height={38}
             />

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { fetchFromBackend } from '@/lib/api/server';
+import { requireSession } from '@/lib/auth/session';
 import type { TicketFormConfigResponse } from '@/lib/api/types';
 import NewTicketForm from '@/components/NewTicketForm';
 import './page.css';
@@ -19,6 +20,7 @@ async function getFormConfig(): Promise<TicketFormConfigResponse | null> {
 }
 
 export default async function NewTicketPage() {
+  await requireSession();
   const config = await getFormConfig();
 
   if (!config) {

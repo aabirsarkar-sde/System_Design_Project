@@ -4,7 +4,7 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { MessageSquare, Paperclip, Clock } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api/server';
-import { DEFAULT_USER_ID } from '@/lib/constants';
+import { requireSession } from '@/lib/auth/session';
 import type { RequestBoardColumn, RequestBoardResponse } from '@/lib/api/types';
 import './page.css';
 
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description: 'Track service requests by stage, priority, and assignment on the operational board.',
 };
 
-async function getRequestBoard(): Promise<RequestBoardResponse | null> {
+async function getRequestBoard(userId: string): Promise<RequestBoardResponse | null> {
   try {
-    return await fetchFromBackend<RequestBoardResponse>(`/api/requests/board?userId=${encodeURIComponent(DEFAULT_USER_ID)}`);
+    return await fetchFromBackend<RequestBoardResponse>(`/api/requests/board?userId=${encodeURIComponent(userId)}`);
   } catch {
     return null;
   }
@@ -53,6 +53,9 @@ function statusClass(status: string): string {
   if (status === 'DISPATCHED') {
     return 'status-text-dispatched';
   }
+  if (status === 'SCHEDULED') {
+    return 'status-text-dispatched';
+  }
   if (status === 'IN_PROGRESS') {
     return 'status-text-in-progress';
   }
@@ -64,7 +67,8 @@ function statusClass(status: string): string {
 }
 
 export default async function RequestsPage() {
-  const requestBoard = await getRequestBoard();
+  const session = await requireSession();
+  const requestBoard = await getRequestBoard(session.userId);
 
   if (!requestBoard) {
     return (

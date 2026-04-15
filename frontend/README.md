@@ -14,8 +14,9 @@ Required variables:
 
 - `BACKEND_API_BASE_URL` (example: `http://localhost:4000`)
 - `SITE_BASE_URL` (example: `http://localhost:3000`)
+- `SESSION_SECRET` for production session signing
 
-Both are required and validated at runtime for server-side fetches and SEO metadata generation.
+`BACKEND_API_BASE_URL` and `SITE_BASE_URL` are required in production and validated at runtime for server-side fetches and metadata generation. In local development they fall back to `http://localhost:4000` and `http://localhost:3000`.
 
 ## Run
 
@@ -28,6 +29,13 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+## Authentication
+
+- Students sign in with their enrollment number.
+- Seeded student passwords are the first 4 characters of the enrollment number.
+- The frontend stores a signed `campus_session` cookie after proxying credentials to the backend login endpoint.
+- Production deployments should always set a strong `SESSION_SECRET`.
+
 ## Build and Lint
 
 ```bash
@@ -37,6 +45,7 @@ npm run build
 
 ## Backend-Driven Pages
 
+- `/login` sign-in page
 - `/` resident dashboard
 - `/admin` admin operations dashboard
 - `/analytics` analytics view
