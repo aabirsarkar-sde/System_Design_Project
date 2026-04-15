@@ -64,7 +64,7 @@ export default function Sidebar() {
         <div className="brand-mark">VC</div>
         <div>
           <p className="brand-kicker">Campus Service Desk</p>
-          <h1 className="brand-title">Vanguard Operations</h1>
+          <h1 className="brand-title">NST Operations</h1>
         </div>
       </div>
 
