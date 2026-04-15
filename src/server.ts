@@ -148,6 +148,71 @@ function validateCreateRequestPayload(payload: unknown): {
   };
 }
 
+function parseRequestStatus(value: unknown): RequestStatus {
+  if (typeof value !== "string") {
+    throw new HttpError(400, "status is required");
+  }
+
+  const normalized = value.trim();
+  const allowed: RequestStatus[] = [
+    "PENDING",
+    "DISPATCHED",
+    "IN_PROGRESS",
+    "SCHEDULED",
+    "RESOLVED",
+  ];
+
+  if (!allowed.includes(normalized as RequestStatus)) {
+    throw new HttpError(
+      400,
+      "status must be one of: PENDING, DISPATCHED, IN_PROGRESS, SCHEDULED, RESOLVED",
+    );
+  }
+
+  return normalized as RequestStatus;
+}
+
+function parseBookingDate(value: unknown): Date {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new HttpError(400, "bookingDate is required (ISO 8601)");
+  }
+
+  const parsed = new Date(value.trim());
+  if (Number.isNaN(parsed.getTime())) {
+    throw new HttpError(400, "bookingDate must be a valid ISO 8601 date-time");
+  }
+  if (parsed.getTime() <= Date.now()) {
+    throw new HttpError(400, "bookingDate must be in the future");
+  }
+
+  return parsed;
+}
+
+function validateCreateBookingPayload(payload: unknown): {
+  userId: string;
+  facilityId: string;
+  bookingDate: Date;
+} {
+  if (!payload || typeof payload !== "object") {
+    throw new HttpError(400, "Invalid payload");
+  }
+
+  const input = payload as Record<string, unknown>;
+  const userId = ensureUserId(input.userId);
+  const facilityId =
+    typeof input.facilityId === "string" ? input.facilityId.trim() : "";
+
+  if (!facilityId) {
+    throw new HttpError(400, "facilityId is required");
+  }
+
+  return {
+    userId,
+    facilityId,
+    bookingDate: parseBookingDate(input.bookingDate),
+  };
+}
+
 function validateLoginPayload(payload: unknown): {
   enrollmentNumber: string;
   password: string;
@@ -290,6 +355,40 @@ app.get(
     res.json({
       ...mapAuthenticatedUser(user),
       unreadNotifications,
+    });
+  }),
+);
+
+app.get(
+  "/api/notifications",
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = ensureUserId(req.query.userId);
+
+    const user = await prisma.user.findUnique({
+      where: { userId },
+      select: { userId: true },
+    });
+
+    if (!user) {
+      throw new HttpError(404, "User not found");
+    }
+
+    const notifications = await prisma.notification.findMany({
+      where: { userId },
+      orderBy: { sentAt: "desc" },
+      select: {
+        notificationId: true,
+        message: true,
+        sentAt: true,
+      },
+    });
+
+    res.json({
+      notifications: notifications.map((notification) => ({
+        notificationId: notification.notificationId,
+        message: notification.message,
+        sentAt: asIsoDate(notification.sentAt),
+      })),
     });
   }),
 );
@@ -588,6 +687,57 @@ app.get(
   }),
 );
 
+app.post(
+  "/api/bookings",
+  asyncHandler(async (req: Request, res: Response) => {
+    const payload = validateCreateBookingPayload(req.body);
+
+    const [user, facility] = await Promise.all([
+      prisma.user.findUnique({
+        where: { userId: payload.userId },
+        select: { userId: true },
+      }),
+      prisma.facility.findUnique({
+        where: { facilityId: payload.facilityId },
+        select: { facilityId: true, available: true },
+      }),
+    ]);
+
+    if (!user) {
+      throw new HttpError(404, "User not found");
+    }
+    if (!facility) {
+      throw new HttpError(404, "Facility not found");
+    }
+    if (!facility.available) {
+      throw new HttpError(400, "Facility is not available for booking");
+    }
+
+    const booking = await prisma.booking.create({
+      data: {
+        bookingDate: payload.bookingDate,
+        userId: payload.userId,
+        facilityId: payload.facilityId,
+      },
+      select: {
+        bookingId: true,
+        userId: true,
+        facilityId: true,
+        bookingDate: true,
+        cancelled: true,
+      },
+    });
+
+    res.status(201).json({
+      bookingId: booking.bookingId,
+      userId: booking.userId,
+      facilityId: booking.facilityId,
+      bookingDate: asIsoDate(booking.bookingDate),
+      cancelled: booking.cancelled,
+    });
+  }),
+);
+
 app.get("/api/ticket/form-config", (_req: Request, res: Response) => {
   res.json(ticketFormConfig);
 });
@@ -635,6 +785,56 @@ app.post(
       ticketCode: request.ticketCode,
       status: request.status,
       createdAt: asIsoDate(request.createdAt),
+    });
+  }),
+);
+
+app.patch(
+  "/api/requests/:requestId/status",
+  asyncHandler(async (req: Request, res: Response) => {
+    const rawRequestId = req.params.requestId;
+    const requestId =
+      typeof rawRequestId === "string" ? rawRequestId.trim() : "";
+    if (!requestId) {
+      throw new HttpError(400, "requestId is required");
+    }
+
+    const status = parseRequestStatus((req.body as Record<string, unknown>)?.status);
+
+    const request = await prisma.serviceRequest.update({
+      where: { requestId },
+      data: { status },
+      select: {
+        requestId: true,
+        ticketCode: true,
+        status: true,
+        updatedAt: true,
+        userId: true,
+      },
+    }).catch((error: unknown) => {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code?: string }).code === "P2025"
+      ) {
+        throw new HttpError(404, "Request not found");
+      }
+      throw error;
+    });
+
+    await prisma.notification.create({
+      data: {
+        userId: request.userId,
+        message: `Your request ${request.ticketCode} is now: ${request.status}`,
+      },
+    });
+
+    res.json({
+      requestId: request.requestId,
+      ticketCode: request.ticketCode,
+      status: request.status,
+      updatedAt: asIsoDate(request.updatedAt),
     });
   }),
 );

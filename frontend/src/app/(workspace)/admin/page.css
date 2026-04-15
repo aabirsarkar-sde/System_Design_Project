@@ -138,6 +138,28 @@
   font-weight: 700;
 }
 
+.admin-status-action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.admin-status-select {
+  min-width: 140px;
+  font-size: 0.75rem;
+  padding: 0.32rem 0.48rem;
+  border-radius: 10px;
+  border: 1px solid rgba(28, 40, 52, 0.15);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text-primary);
+}
+
+.admin-status-action .btn {
+  padding: 0.38rem 0.65rem;
+  font-size: 0.74rem;
+}
+
 .admin-table-footer {
   display: flex;
   align-items: center;

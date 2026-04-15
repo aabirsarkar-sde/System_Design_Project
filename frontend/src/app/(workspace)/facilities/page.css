@@ -108,6 +108,35 @@
   line-height: 1.5;
 }
 
+.fac-booking-form {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(28, 40, 52, 0.08);
+}
+
+.fac-booking-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.fac-booking-input {
+  flex: 1 1 180px;
+  min-width: 0;
+  font-size: 0.78rem;
+  padding: 0.42rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(28, 40, 52, 0.15);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text-primary);
+}
+
+.fac-booking-submit {
+  padding: 0.44rem 0.85rem;
+  font-size: 0.76rem;
+}
+
 @media (max-width: 1120px) {
   .facilities-grid {
     grid-template-columns: 1fr;

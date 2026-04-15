@@ -11,6 +11,7 @@ import {
   Users,
   Wifi,
 } from "lucide-react";
+import AdminRequestStatusAction from "@/components/AdminRequestStatusAction";
 import { fetchFromBackend } from "@/lib/api/server";
 import { requireSession } from "@/lib/auth/session";
 import type {
@@ -143,7 +144,12 @@ function queueRow(item: AdminQueueItem, isLast: boolean) {
           ) : null}
         </div>
       </td>
-      <td className="text-secondary">Read only</td>
+      <td>
+        <AdminRequestStatusAction
+          requestId={item.requestId}
+          currentStatus={item.status}
+        />
+      </td>
     </tr>
   );
 }

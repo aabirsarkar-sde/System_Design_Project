@@ -193,3 +193,27 @@ export interface CreateRequestResponse {
   status: string;
   createdAt: string;
 }
+
+export interface NotificationItem {
+  notificationId: string;
+  message: string;
+  sentAt: string;
+}
+
+export interface NotificationsListResponse {
+  notifications: NotificationItem[];
+}
+
+export interface CreateBookingPayload {
+  userId: string;
+  facilityId: string;
+  bookingDate: string;
+}
+
+export interface CreateBookingResponse {
+  bookingId: string;
+  userId: string;
+  facilityId: string;
+  bookingDate: string;
+  cancelled: boolean;
+}

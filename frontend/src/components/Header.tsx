@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, LogOut, Search } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import { fetchFromBackend } from "@/lib/api/server";
+import NotificationPanel from "@/components/NotificationPanel";
 import type {
   ApiHealthResponse,
   HeaderProfileResponse,
@@ -78,14 +79,9 @@ export default async function Header() {
         ) : null}
 
         {isLoggedIn ? (
-          <button className="header-icon-btn" type="button" aria-label="Notifications">
-            <Bell size={18} />
-            {profile && profile.unreadNotifications > 0 ? (
-              <span className="header-notification-count">
-                {profile.unreadNotifications}
-              </span>
-            ) : null}
-          </button>
+          <NotificationPanel
+            initialUnreadCount={profile?.unreadNotifications ?? 0}
+          />
         ) : null}
 
         {isLoggedIn ? (

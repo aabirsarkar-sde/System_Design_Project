@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   Video,
 } from "lucide-react";
+import FacilityBookingForm from "@/components/FacilityBookingForm";
 import { fetchFromBackend } from "@/lib/api/server";
 import { requireSession } from "@/lib/auth/session";
 import type { FacilitiesResponse, FacilityItem } from "@/lib/api/types";
@@ -163,6 +164,11 @@ export default async function FacilitiesPage() {
                   <strong>{facility.powerStatus ?? (facility.available ? "Open" : "Closed")}</strong>
                 </div>
               </div>
+              <FacilityBookingForm
+                facilityId={facility.facilityId}
+                facilityName={facility.name}
+                available={facility.available}
+              />
             </article>
           );
         })}
