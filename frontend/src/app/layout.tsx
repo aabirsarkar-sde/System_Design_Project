@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
 import { getSiteBaseUrl } from "@/lib/env";
 import "./globals.css";
 
@@ -12,7 +10,8 @@ export const metadata: Metadata = {
     default: "Vanguard Campus Operations",
     template: "%s | Vanguard Campus Operations",
   },
-  description: "Secure campus service management platform for requests, analytics, and facilities operations.",
+  description:
+    "Secure campus service management platform for requests, analytics, facilities operations, and student support.",
   keywords: [
     "campus operations",
     "service request management",
@@ -27,14 +26,16 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Vanguard Campus Operations",
-    description: "Real-time operations platform for campus service workflows and infrastructure visibility.",
+    description:
+      "Real-time operations platform for campus service workflows, student support, and facilities visibility.",
     type: "website",
     siteName: "Vanguard Campus Operations",
   },
   twitter: {
     card: "summary_large_image",
     title: "Vanguard Campus Operations",
-    description: "Real-time operations platform for campus service workflows and infrastructure visibility.",
+    description:
+      "Real-time operations platform for campus service workflows, student support, and facilities visibility.",
   },
 };
 
@@ -45,21 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <div className="ambient-backdrop" aria-hidden="true">
-          <div className="ambient-blob ambient-blob-one" />
-          <div className="ambient-blob ambient-blob-two" />
-          <div className="ambient-blob ambient-blob-three" />
-          <div className="ambient-grid" />
-        </div>
-        <div className="app-container animate-fade-in">
-          <Sidebar />
-          <div className="main-content">
-            <Header />
-            {children}
-          </div>
-        </div>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

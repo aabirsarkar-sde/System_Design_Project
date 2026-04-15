@@ -7,6 +7,7 @@
     "build": "prisma generate && tsc",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "db:sync-passwords": "node prisma/sync-student-passwords.js",
     "db:setup": "npm run db:push && npm run db:seed",
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",

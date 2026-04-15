@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Metadata } from 'next';
 import { fetchFromBackend } from '@/lib/api/server';
 import { requireSession } from '@/lib/auth/session';
@@ -25,8 +24,8 @@ export default async function NewTicketPage() {
 
   if (!config) {
     return (
-      <main className="ticket-container">
-        <section className="card">
+      <main className="page-shell">
+        <section className="panel">
           <h2 className="text-2xl font-bold mb-2">Ticket Form Unavailable</h2>
           <p className="text-sm text-secondary">Unable to load request categories and SLA details from backend API.</p>
         </section>

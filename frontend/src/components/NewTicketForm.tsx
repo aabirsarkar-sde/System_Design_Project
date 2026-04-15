@@ -1,70 +1,89 @@
 "use client";
 
-import React, { FormEvent, useMemo, useState } from 'react';
-import Link from 'next/link';
+import type { FormEvent } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
-  Wrench,
-  MapPin,
-  UploadCloud,
   Info,
   Monitor,
   Package,
   Shield,
   Trash2,
-} from 'lucide-react';
+  UploadCloud,
+  Wrench,
+} from "lucide-react";
 import type {
   CreateRequestResponse,
   TicketFormConfigResponse,
-} from '@/lib/api/types';
+} from "@/lib/api/types";
 
 interface NewTicketFormProps {
   config: TicketFormConfigResponse;
 }
 
 type FeedbackState =
-  | { type: 'success'; message: string }
-  | { type: 'error'; message: string }
+  | { type: "success"; message: string }
+  | { type: "error"; message: string }
   | null;
 
 function categoryIcon(code: string) {
-  if (code === 'MAINTENANCE') {
-    return <Wrench size={24} className="text-blue" />;
+  if (code === "MAINTENANCE") {
+    return <Wrench size={22} />;
   }
-  if (code === 'IT_SUPPORT') {
-    return <Monitor size={24} />;
+  if (code === "IT_SUPPORT") {
+    return <Monitor size={22} />;
   }
-  if (code === 'SECURITY') {
-    return <Shield size={24} />;
+  if (code === "SECURITY") {
+    return <Shield size={22} />;
   }
-  if (code === 'SUPPLIES') {
-    return <Package size={24} />;
+  if (code === "SUPPLIES") {
+    return <Package size={22} />;
   }
 
-  return <Trash2 size={24} />;
+  return <Trash2 size={22} />;
 }
 
-function priorityLabel(priority: string): string {
+function categoryDescription(code: string): string {
+  if (code === "MAINTENANCE") {
+    return "Physical repairs, HVAC, lighting, and infrastructure issues.";
+  }
+  if (code === "IT_SUPPORT") {
+    return "Connectivity, devices, projector, and classroom technical support.";
+  }
+  if (code === "SECURITY") {
+    return "Access, permissions, coordination, and on-site safety support.";
+  }
+  if (code === "SUPPLIES") {
+    return "Operational materials, logistics, and workspace supply needs.";
+  }
+
+  return "Cleaning, disposal, and recurring upkeep support.";
+}
+
+function priorityDescription(priority: string): string {
   switch (priority) {
-    case 'LOW':
-      return 'Routine';
-    case 'MEDIUM':
-      return 'Urgent';
-    case 'HIGH':
-      return 'High';
-    case 'EMERGENCY':
-      return 'Emergency';
+    case "LOW":
+      return "Routine issue with standard response time.";
+    case "MEDIUM":
+      return "Needs attention soon but is not service critical.";
+    case "HIGH":
+      return "Causing disruption and should be handled quickly.";
+    case "EMERGENCY":
+      return "Critical issue affecting safety or major operations.";
     default:
       return priority;
   }
 }
 
 export default function NewTicketForm({ config }: NewTicketFormProps) {
-  const [category, setCategory] = useState(config.categories[0]?.code ?? 'MAINTENANCE');
-  const [priority, setPriority] = useState(config.priorities[0] ?? 'LOW');
-  const [title, setTitle] = useState('');
-  const [building, setBuilding] = useState('');
-  const [room, setRoom] = useState('');
-  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState(
+    config.categories[0]?.code ?? "MAINTENANCE",
+  );
+  const [priority, setPriority] = useState(config.priorities[0] ?? "LOW");
+  const [title, setTitle] = useState("");
+  const [building, setBuilding] = useState("");
+  const [room, setRoom] = useState("");
+  const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackState>(null);
 
@@ -74,12 +93,12 @@ export default function NewTicketForm({ config }: NewTicketFormProps) {
   );
 
   const resetForm = () => {
-    setCategory(config.categories[0]?.code ?? 'MAINTENANCE');
-    setPriority(config.priorities[0] ?? 'LOW');
-    setTitle('');
-    setBuilding('');
-    setRoom('');
-    setDescription('');
+    setCategory(config.categories[0]?.code ?? "MAINTENANCE");
+    setPriority(config.priorities[0] ?? "LOW");
+    setTitle("");
+    setBuilding("");
+    setRoom("");
+    setDescription("");
     setFeedback(null);
   };
 
@@ -98,235 +117,288 @@ export default function NewTicketForm({ config }: NewTicketFormProps) {
         priority,
       };
 
-      const response = await fetch('/api/requests', {
-        method: 'POST',
+      const response = await fetch("/api/requests", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
 
-      const body = (await response.json().catch(() => ({ message: 'Request failed' }))) as
+      const body = (await response.json().catch(() => ({ message: "Request failed" }))) as
         | (CreateRequestResponse & { message?: string })
         | { message?: string };
 
-      if (!response.ok || !('ticketCode' in body)) {
-        setFeedback({ type: 'error', message: body.message ?? 'Could not create request. Please verify your details.' });
+      if (!response.ok || !("ticketCode" in body)) {
+        setFeedback({
+          type: "error",
+          message:
+            body.message ?? "Could not create request. Please verify your details.",
+        });
         return;
       }
 
       setFeedback({
-        type: 'success',
-        message: `Request submitted successfully. Ticket #${body.ticketCode} is now ${body.status.replace(/_/g, ' ')}.`,
+        type: "success",
+        message: `Request submitted successfully. Ticket #${body.ticketCode} is now ${body.status.replace(
+          /_/g,
+          " ",
+        )}.`,
       });
-      setTitle('');
-      setBuilding('');
-      setRoom('');
-      setDescription('');
-      setPriority(config.priorities[0] ?? 'LOW');
+      setTitle("");
+      setBuilding("");
+      setRoom("");
+      setDescription("");
+      setPriority(config.priorities[0] ?? "LOW");
     } catch {
-      setFeedback({ type: 'error', message: 'Network error while submitting your request.' });
+      setFeedback({
+        type: "error",
+        message: "Network error while submitting your request.",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <main className="ticket-container">
-      <div className="progress-container mb-8">
-        <div className="progress-line"></div>
-        <div className="progress-steps">
-          <div className="step active">
-            <div className="step-circle active">1</div>
-            <div className="step-label">CATEGORY</div>
+    <main className="ticket-page page-shell">
+      <section className="page-hero ticket-hero panel animate-slide-up">
+        <div>
+          <div className="eyebrow">New Service Request</div>
+          <h1 className="page-title">Create a request with the right operational context.</h1>
+          <p className="page-description">
+            Choose the service area, describe the issue clearly, and submit a
+            backend-connected ticket that appears immediately in the request
+            board.
+          </p>
+        </div>
+
+        <div className="ticket-step-strip">
+          <div className="ticket-step active">
+            <span>1</span>
+            <strong>Category</strong>
           </div>
-          <div className="step active">
-            <div className="step-circle active">2</div>
-            <div className="step-label">LOCATION</div>
+          <div className="ticket-step active">
+            <span>2</span>
+            <strong>Location</strong>
           </div>
-          <div className="step active">
-            <div className="step-circle active">3</div>
-            <div className="step-label">URGENCY</div>
+          <div className="ticket-step active">
+            <span>3</span>
+            <strong>Priority</strong>
           </div>
         </div>
-      </div>
+      </section>
 
       {feedback ? (
         <div className={`ticket-feedback ${feedback.type}`} role="status" aria-live="polite">
-          {feedback.message}
-          {feedback.type === 'success' ? (
-            <Link href="/requests" className="ticket-feedback-link">View request board</Link>
+          <span>{feedback.message}</span>
+          {feedback.type === "success" ? (
+            <Link href="/requests" className="ticket-feedback-link">
+              View request board
+            </Link>
           ) : null}
         </div>
       ) : null}
 
-      <form onSubmit={handleSubmit}>
-        <div className="ticket-content">
-          <div className="ticket-main-col">
-            <section className="card mb-6">
-              <h3 className="flex items-center gap-2 font-semibold text-lg mb-6">
-                <Wrench size={20} className="text-secondary" />
-                Service Category
-              </h3>
-
-              <div className="category-grid">
-                {config.categories.map((item) => (
-                  <button
-                    key={item.code}
-                    type="button"
-                    className={`category-card ${item.code === category ? 'selected' : ''}`}
-                    onClick={() => setCategory(item.code)}
-                  >
-                    <div className={`cat-icon ${item.code === 'MAINTENANCE' ? 'bg-blue-muted' : ''}`}>
-                      {categoryIcon(item.code)}
-                    </div>
-                    <span className={`cat-label ${item.code === category ? 'text-primary' : ''}`}>{item.label}</span>
-                  </button>
-                ))}
+      <form onSubmit={handleSubmit} className="ticket-form-layout">
+        <div className="ticket-form-main">
+          <section className="panel animate-slide-up delay-100">
+            <div className="section-header">
+              <div>
+                <h3>Choose a service category</h3>
+                <p>Start with the team or service area best suited to the issue.</p>
               </div>
-            </section>
+            </div>
 
-            <section className="card mb-6 location-details">
-              <h3 className="flex items-center gap-2 font-semibold text-lg mb-6">
-                <MapPin size={20} className="text-secondary" />
-                Location & Details
-              </h3>
+            <div className="ticket-category-grid">
+              {config.categories.map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  className={`ticket-category-card ${
+                    item.code === category ? "selected" : ""
+                  }`}
+                  onClick={() => setCategory(item.code)}
+                >
+                  <div className="ticket-category-icon">{categoryIcon(item.code)}</div>
+                  <div className="ticket-category-copy">
+                    <h4>{item.label}</h4>
+                    <p>{categoryDescription(item.code)}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
 
-              <div className="form-group mb-6">
-                <label>ISSUE TITLE</label>
+          <section className="panel animate-slide-up delay-200">
+            <div className="section-header">
+              <div>
+                <h3>Location and issue details</h3>
+                <p>Write the issue clearly so the assigned team can act quickly.</p>
+              </div>
+            </div>
+
+            <div className="form-group mb-6">
+              <label htmlFor="ticket-title">Issue title</label>
+              <input
+                id="ticket-title"
+                type="text"
+                required
+                minLength={6}
+                maxLength={120}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Short summary of the issue"
+              />
+            </div>
+
+            <div className="ticket-field-grid">
+              <div className="form-group">
+                <label htmlFor="ticket-building">Building name</label>
                 <input
+                  id="ticket-building"
                   type="text"
                   required
-                  minLength={6}
-                  maxLength={120}
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Short summary of the issue"
+                  minLength={2}
+                  maxLength={100}
+                  value={building}
+                  onChange={(event) => setBuilding(event.target.value)}
+                  placeholder="North Wing - Engineering Complex"
                 />
               </div>
 
-              <div className="flex gap-4 mb-6">
-                <div className="form-group flex-1">
-                  <label>BUILDING NAME</label>
-                  <input
-                    type="text"
-                    required
-                    minLength={2}
-                    maxLength={100}
-                    value={building}
-                    onChange={(event) => setBuilding(event.target.value)}
-                    placeholder="North Wing - Engineering Complex"
-                  />
-                </div>
-                <div className="form-group flex-1">
-                  <label>ROOM NUMBER</label>
-                  <input
-                    type="text"
-                    required
-                    minLength={1}
-                    maxLength={50}
-                    value={room}
-                    onChange={(event) => setRoom(event.target.value)}
-                    placeholder="e.g. 402-B"
-                  />
-                </div>
-              </div>
-
-              <div className="form-group mb-6">
-                <label>ISSUE DESCRIPTION</label>
-                <textarea
-                  rows={4}
+              <div className="form-group">
+                <label htmlFor="ticket-room">Room or area</label>
+                <input
+                  id="ticket-room"
+                  type="text"
                   required
-                  minLength={10}
-                  maxLength={2000}
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                  placeholder="Describe the issue in detail"
-                ></textarea>
-              </div>
-
-              <div className="form-group mb-0">
-                <label>ATTACHMENT (OPTIONAL)</label>
-                <div className="upload-zone" aria-hidden="true">
-                  <UploadCloud size={24} className="text-secondary mb-2" />
-                  <p>Attachment upload is available in the next release.</p>
-                </div>
-              </div>
-            </section>
-
-            <section className="card">
-              <h3 className="flex items-center gap-2 font-semibold text-lg mb-6">
-                <span className="text-secondary font-bold text-xl ml-1 mr-1">!</span>
-                Priority Level
-              </h3>
-
-              <div className="flex gap-6">
-                {config.priorities.map((item) => (
-                  <label key={item} className="radio-group">
-                    <input
-                      type="radio"
-                      name="priority"
-                      value={item}
-                      checked={priority === item}
-                      onChange={(event) => setPriority(event.target.value)}
-                    />
-                    <span className="radio-label">{priorityLabel(item)}</span>
-                  </label>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          <div className="ticket-side-col">
-            <div className="card mb-6">
-              <h3 className="font-semibold text-lg mb-6 border-b border-border pb-4">Request Summary</h3>
-              <div className="summary-row">
-                <span className="summary-label">TYPE</span>
-                <span className="summary-val text-primary text-right">{selectedCategory?.label ?? 'Maintenance'}</span>
-              </div>
-              <div className="summary-row">
-                <span className="summary-label">LOCATION</span>
-                <div className="text-right">
-                  <span className="summary-val text-primary block">{building || 'Building not set'}</span>
-                  <span className="summary-val">{room || 'Room not set'}</span>
-                </div>
-              </div>
-              <div className="summary-row border-none pb-0">
-                <span className="summary-label">SLA GOAL</span>
-                <span className="summary-val text-orange text-right">{config.slaGoal}</span>
+                  minLength={1}
+                  maxLength={50}
+                  value={room}
+                  onChange={(event) => setRoom(event.target.value)}
+                  placeholder="e.g. C 103 or Projector Bay"
+                />
               </div>
             </div>
 
-            <div className="card text-secondary text-sm mb-6 pb-0 bg-transparent border-none p-0">
-              <div className="flex items-center gap-2 text-primary font-semibold mb-4 text-base">
-                <Info size={18} className="text-orange" />
-                Technical Guidelines
-              </div>
-              <ul className="guidelines-list">
-                {config.guidelines.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+            <div className="form-group mb-6">
+              <label htmlFor="ticket-description">Issue description</label>
+              <textarea
+                id="ticket-description"
+                rows={5}
+                required
+                minLength={10}
+                maxLength={2000}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Describe what is happening, what is affected, and anything the team should know before arriving."
+              />
             </div>
 
-            <div className="card p-0 overflow-hidden pulse-image-card">
-              <div className="pulse-image" style={{ backgroundImage: `url('${config.campusStatus.imageUrl}')` }}>
-                <div className="status-overlay">
-                  <div className="pulse-badge">{config.campusStatus.label}</div>
-                  <div className="font-bold text-shadow mt-1">{config.campusStatus.message}</div>
-                </div>
+            <div className="ticket-upload-note">
+              <UploadCloud size={20} />
+              Attachment upload is reserved for the next release. For now, place
+              the most important context in the description field.
+            </div>
+          </section>
+
+          <section className="panel animate-slide-up delay-300">
+            <div className="section-header">
+              <div>
+                <h3>Set response priority</h3>
+                <p>Choose the urgency level that matches operational impact.</p>
               </div>
             </div>
-          </div>
+
+            <div className="ticket-priority-grid">
+              {config.priorities.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className={`ticket-priority-card ${priority === item ? "selected" : ""}`}
+                  onClick={() => setPriority(item)}
+                  aria-pressed={priority === item}
+                >
+                  <strong>{item.replace(/_/g, " ")}</strong>
+                  <p>{priorityDescription(item)}</p>
+                </button>
+              ))}
+            </div>
+          </section>
         </div>
 
-        <div className="ticket-actions flex justify-between items-center mt-8 pt-6 border-t border-border">
-          <button type="button" onClick={resetForm} className="text-sm font-semibold tracking-wider hover:text-white uppercase">DISCARD</button>
-          <div className="flex gap-4">
-            <button type="submit" disabled={isSubmitting} className="btn btn-primary uppercase tracking-wider font-semibold text-sm px-8 py-3">
-              {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REQUEST'}
-            </button>
+        <aside className="ticket-form-side">
+          <div className="ticket-side-stack">
+            <section className="panel ticket-summary-panel animate-slide-up delay-200">
+              <div className="section-header">
+                <div>
+                  <h3>Request summary</h3>
+                  <p>Review the final context before submitting.</p>
+                </div>
+              </div>
+
+              <div className="ticket-summary-row">
+                <span>Category</span>
+                <strong>{selectedCategory?.label ?? "Maintenance"}</strong>
+              </div>
+              <div className="ticket-summary-row">
+                <span>Location</span>
+                <strong>{building || "Not set"}{room ? ` · ${room}` : ""}</strong>
+              </div>
+              <div className="ticket-summary-row">
+                <span>Priority</span>
+                <strong>{priority.replace(/_/g, " ")}</strong>
+              </div>
+              <div className="ticket-summary-row">
+                <span>SLA goal</span>
+                <strong>{config.slaGoal}</strong>
+              </div>
+            </section>
+
+            <section className="panel animate-slide-up delay-300">
+              <div className="section-header">
+                <div>
+                  <h3>Technical guidelines</h3>
+                  <p>Helpful context that speeds up the first response.</p>
+                </div>
+              </div>
+
+              <ul className="ticket-guidelines">
+                {config.guidelines.map((item) => (
+                  <li key={item}>
+                    <Info size={16} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="ticket-status-card animate-slide-up delay-400">
+              <div
+                className="ticket-status-image"
+                style={{ backgroundImage: `url('${config.campusStatus.imageUrl}')` }}
+              />
+              <div className="ticket-status-copy">
+                <span className="badge badge-primary">{config.campusStatus.label}</span>
+                <h3>{config.campusStatus.message}</h3>
+                <p>
+                  This operational banner is pulled into the form so students
+                  keep the current campus service posture in view while filing a
+                  request.
+                </p>
+              </div>
+            </section>
           </div>
+        </aside>
+
+        <div className="ticket-actions animate-slide-up delay-400">
+          <button type="button" onClick={resetForm} className="btn btn-outline">
+            Reset Form
+          </button>
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+            {isSubmitting ? "Submitting..." : "Submit Request"}
+          </button>
         </div>
       </form>
     </main>

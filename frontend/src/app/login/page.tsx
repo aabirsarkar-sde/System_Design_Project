@@ -6,8 +6,27 @@ import "./page.css";
 
 export const metadata: Metadata = {
   title: "Student Login",
-  description: "Access the campus operations dashboard with your enrollment number.",
+  description:
+    "Access the campus operations workspace to review seating and track service requests.",
 };
+
+const loginHighlights = [
+  {
+    title: "Contest-ready resident access",
+    description:
+      "Students can enter the workspace, verify seating allocation, and raise support issues without switching tools.",
+  },
+  {
+    title: "Operational response in one console",
+    description:
+      "Requests, facilities, analytics, and dispatch signals stay connected across the full experience.",
+  },
+  {
+    title: "Production-backed data flow",
+    description:
+      "Prisma and PostgreSQL now drive the platform instead of a temporary in-memory demo state.",
+  },
+];
 
 export default async function LoginPage() {
   const session = await getSession();
@@ -18,18 +37,31 @@ export default async function LoginPage() {
 
   return (
     <main className="login-page">
-      <section className="login-hero">
-        <div className="login-copy">
-          <div className="login-eyebrow">Neon + Prisma Ready</div>
-          <h2>Production-backed student access is now part of the app flow.</h2>
+      <div className="login-stage animate-fade-in">
+        <section className="login-showcase">
+          <div className="eyebrow">Vanguard Campus Operations</div>
+          <h2>Professional service workflows for students, facilities, and contest support.</h2>
           <p>
-            Your registrar CSV is seeded into Postgres, and the dashboard loads
-            live resident data after sign-in instead of a hardcoded demo user.
+            This workspace is designed for fast issue reporting, clearer
+            operational visibility, and reliable access to student-specific
+            contest logistics.
           </p>
-        </div>
+
+          <div className="login-highlights">
+            {loginHighlights.map((item, index) => (
+              <article
+                key={item.title}
+                className={`login-highlight animate-slide-up delay-${(index + 1) * 100}`}
+              >
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <LoginForm />
-      </section>
+      </div>
     </main>
   );
 }

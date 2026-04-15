@@ -1,17 +1,17 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
+import { Eye, EyeOff, KeyRound, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-type FeedbackState =
-  | { type: "error"; message: string }
-  | null;
+type FeedbackState = { type: "error"; message: string } | null;
 
 export default function LoginForm() {
   const router = useRouter();
   const [enrollmentNumber, setEnrollmentNumber] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackState>(null);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -60,11 +60,12 @@ export default function LoginForm() {
   return (
     <form className="login-card" onSubmit={handleSubmit}>
       <div className="login-card-header">
-        <div className="login-badge">STUDENT ACCESS</div>
-        <h1 className="login-title">Sign in with your enrollment number</h1>
+        <div className="login-badge">Student Sign In</div>
+        <h1 className="login-title">Access your service workspace</h1>
         <p className="login-subtitle">
-          Use your enrollment number as the username. Your password is the first
-          four characters of that enrollment number.
+          Sign in with your enrollment number and your assigned password to
+          review seating details, raise support issues, and track request
+          progress.
         </p>
       </div>
 
@@ -75,29 +76,50 @@ export default function LoginForm() {
       ) : null}
 
       <div className="form-group mb-6">
-        <label>ENROLLMENT NUMBER</label>
-        <input
-          type="text"
-          autoComplete="username"
-          required
-          minLength={4}
-          value={enrollmentNumber}
-          onChange={(event) => setEnrollmentNumber(event.target.value)}
-          placeholder="2401010262"
-        />
+        <label htmlFor="enrollment-number">Enrollment Number</label>
+        <div className="login-input-shell">
+          <UserRound size={18} className="login-input-icon" />
+          <input
+            id="enrollment-number"
+            type="text"
+            autoComplete="username"
+            required
+            minLength={4}
+            value={enrollmentNumber}
+            onChange={(event) => setEnrollmentNumber(event.target.value)}
+            placeholder="Enter your enrollment number"
+          />
+        </div>
       </div>
 
-      <div className="form-group mb-6">
-        <label>PASSWORD</label>
-        <input
-          type="password"
-          autoComplete="current-password"
-          required
-          minLength={4}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="First 4 characters"
-        />
+      <div className="form-group mb-4">
+        <label htmlFor="student-password">Password</label>
+        <div className="login-input-shell">
+          <KeyRound size={18} className="login-input-icon" />
+          <input
+            id="student-password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            required
+            minLength={4}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Enter your password"
+          />
+          <button
+            type="button"
+            className="login-password-toggle"
+            onClick={() => setShowPassword((current) => !current)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+      </div>
+
+      <div className="login-help">
+        Credential issues are handled by the contest coordination desk. Contact
+        the admin team if access does not work.
       </div>
 
       <div className="login-actions">

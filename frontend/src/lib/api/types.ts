@@ -1,6 +1,7 @@
 export interface ApiHealthResponse {
   ok: boolean;
   timestamp: string;
+  database?: string;
 }
 
 export interface HeaderProfileResponse {
@@ -178,7 +179,6 @@ export interface TicketFormConfigResponse {
 }
 
 export interface CreateRequestPayload {
-  userId: string;
   title: string;
   description: string;
   category: string;

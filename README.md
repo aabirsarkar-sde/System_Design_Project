@@ -58,7 +58,7 @@ npm run db:setup
 The seed script imports students from `STUDENTS_CSV_PATH` and creates:
 
 - one user per enrollment number
-- bcrypt-hashed passwords based on the first 4 characters of the enrollment number
+- seeded credentials derived during student account provisioning
 - one seeded admin account
 - facilities, service requests, bookings, and notifications for dashboard coverage
 

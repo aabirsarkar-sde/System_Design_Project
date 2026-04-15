@@ -1,63 +1,114 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
+  BarChart3,
+  Building2,
   House,
   LayoutDashboard,
   Ticket,
-  Building2,
-  BarChart3
-} from 'lucide-react';
-import './Sidebar.css';
+} from "lucide-react";
+import "./Sidebar.css";
+
+const navigationItems = [
+  {
+    href: "/",
+    label: "Resident Hub",
+    description: "Personal overview and seat access",
+    icon: House,
+    matches: ["/"],
+  },
+  {
+    href: "/admin",
+    label: "Admin Desk",
+    description: "Dispatch queue and field teams",
+    icon: LayoutDashboard,
+    matches: ["/admin"],
+  },
+  {
+    href: "/requests",
+    label: "Request Board",
+    description: "Track submitted, active, and closed work",
+    icon: Ticket,
+    matches: ["/requests", "/ticket"],
+  },
+  {
+    href: "/facilities",
+    label: "Facilities",
+    description: "Operational status across campus sites",
+    icon: Building2,
+    matches: ["/facilities"],
+  },
+  {
+    href: "/analytics",
+    label: "Analytics",
+    description: "Performance trends and workload mix",
+    icon: BarChart3,
+    matches: ["/analytics"],
+  },
+];
+
+function isItemActive(pathname: string, matches: string[]): boolean {
+  return matches.some((match) =>
+    match === "/" ? pathname === "/" : pathname.startsWith(match),
+  );
+}
 
 export default function Sidebar() {
   const pathname = usePathname();
-  
+
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h1 className="brand-title">Vanguard Campus</h1>
-        <p className="brand-subtitle">Technical Operations</p>
+        <div className="brand-mark">VC</div>
+        <div>
+          <p className="brand-kicker">Campus Service Desk</p>
+          <h1 className="brand-title">Vanguard Operations</h1>
+        </div>
       </div>
 
-      <nav className="sidebar-nav">
+      <div className="sidebar-section-label">Workspaces</div>
+
+      <nav className="sidebar-nav" aria-label="Primary">
         <ul>
-          <li>
-            <Link href="/" className={`nav-item ${pathname === '/' ? 'active' : ''}`}>
-              <House size={20} />
-              <span>Resident</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin" className={`nav-item ${pathname === '/admin' ? 'active' : ''}`}>
-              <LayoutDashboard size={20} />
-              <span>Admin</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/requests" className={`nav-item ${pathname === '/requests' ? 'active' : ''}`}>
-              <Ticket size={20} />
-              <span>Requests</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/facilities" className={`nav-item ${pathname === '/facilities' ? 'active' : ''}`}>
-              <Building2 size={20} />
-              <span>Facilities</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/analytics" className={`nav-item ${pathname === '/analytics' ? 'active' : ''}`}>
-              <BarChart3 size={20} />
-              <span>Analytics</span>
-            </Link>
-          </li>
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isItemActive(pathname, item.matches);
+
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`nav-item ${active ? "active" : ""}`}
+                >
+                  <span className="nav-icon">
+                    <Icon size={18} />
+                  </span>
+                  <span className="nav-copy">
+                    <strong>{item.label}</strong>
+                    <small>{item.description}</small>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
-      <div className="sidebar-footer"></div>
+      <div className="sidebar-brief">
+        <span className="sidebar-brief-label">Today&apos;s focus</span>
+        <h2>Keep student support visible, calm, and moving.</h2>
+        <p>
+          Resident, requests, facilities, and analytics now work as one
+          coordinated operational flow.
+        </p>
+      </div>
+
+      <div className="sidebar-footer">
+        <span className="sidebar-status-dot" aria-hidden="true" />
+        Contest service environment ready
+      </div>
     </aside>
   );
 }

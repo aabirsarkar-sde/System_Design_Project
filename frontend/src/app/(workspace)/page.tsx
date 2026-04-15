@@ -1,50 +1,46 @@
-import React from 'react';
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { 
-  Wrench, 
-  Router, 
-  Trash2, 
-  Plus, 
-  Snowflake, 
-  WifiOff, 
+import Link from "next/link";
+import type { Metadata } from "next";
+import {
+  Box,
   Lightbulb,
-  UtensilsCrossed,
-  Zap
-} from 'lucide-react';
-import { fetchFromBackend } from '@/lib/api/server';
-import { requireSession } from '@/lib/auth/session';
+  Monitor,
+  Plus,
+  ShieldAlert,
+  Trash2,
+  Wrench,
+} from "lucide-react";
+import { fetchFromBackend } from "@/lib/api/server";
+import { requireSession } from "@/lib/auth/session";
 import type {
   ResidentCampusPulse,
   ResidentDashboardResponse,
   ResidentQuickLaunchItem,
-} from '@/lib/api/types';
-import './page.css';
+} from "@/lib/api/types";
+import "./page.css";
 
 export const metadata: Metadata = {
-  title: 'Resident Dashboard',
-  description: 'Resident view for campus requests, quick actions, and facility updates.',
+  title: "Resident Dashboard",
+  description:
+    "Resident workspace for service requests, quick actions, and contest-day seating visibility.",
 };
 
-function renderIcon(icon: string, size = 24) {
+function renderIcon(icon: string, size = 22) {
   switch (icon) {
-    case 'wrench':
+    case "wrench":
       return <Wrench size={size} />;
-    case 'router':
-      return <Router size={size} />;
-    case 'trash':
+    case "router":
+    case "wifi":
+      return <Monitor size={size} />;
+    case "trash":
       return <Trash2 size={size} />;
-    case 'plus':
-      return <Plus size={size} />;
-    case 'snowflake':
-      return <Snowflake size={size} />;
-    case 'wifi':
-    case 'wifi-off':
-    case 'router-off':
-      return <WifiOff size={size} />;
-    case 'bulb':
-    case 'lightbulb':
+    case "shield":
+      return <ShieldAlert size={size} />;
+    case "box":
+      return <Box size={size} />;
+    case "bulb":
       return <Lightbulb size={size} />;
+    case "plus":
+      return <Plus size={size} />;
     default:
       return <Wrench size={size} />;
   }
@@ -52,43 +48,32 @@ function renderIcon(icon: string, size = 24) {
 
 function statusBadge(status: string) {
   switch (status) {
-    case 'PENDING':
-      return { badgeClass: 'badge badge-status-pending', dotClass: 'status-dot pending' };
-    case 'DISPATCHED':
-      return { badgeClass: 'badge badge-status-dispatched', dotClass: 'status-dot dispatched' };
-    case 'IN_PROGRESS':
-      return { badgeClass: 'badge badge-status-in-progress', dotClass: 'status-dot in-progress' };
-    case 'SCHEDULED':
-      return { badgeClass: 'badge badge-status-dispatched', dotClass: 'status-dot dispatched' };
-    case 'RESOLVED':
-      return { badgeClass: 'badge badge-status-resolved', dotClass: 'status-dot resolved' };
+    case "PENDING":
+      return { badgeClass: "badge badge-status-pending", dotClass: "status-dot pending" };
+    case "DISPATCHED":
+    case "SCHEDULED":
+      return { badgeClass: "badge badge-status-dispatched", dotClass: "status-dot dispatched" };
+    case "IN_PROGRESS":
+      return { badgeClass: "badge badge-status-in-progress", dotClass: "status-dot in-progress" };
+    case "RESOLVED":
+      return { badgeClass: "badge badge-status-resolved", dotClass: "status-dot resolved" };
     default:
-      return { badgeClass: 'badge badge-status-in-progress', dotClass: 'status-dot in-progress' };
+      return { badgeClass: "badge badge-gray", dotClass: "status-dot gray" };
   }
-}
-
-function statusLabel(status: string): string {
-  return status.replace(/_/g, ' ');
 }
 
 function requestIconClass(status: string): string {
-  if (status === 'PENDING') {
-    return 'req-icon pending';
+  if (status === "PENDING") {
+    return "resident-request-icon pending";
   }
-  if (status === 'DISPATCHED') {
-    return 'req-icon dispatched';
+  if (status === "DISPATCHED" || status === "SCHEDULED") {
+    return "resident-request-icon dispatched";
   }
-  if (status === 'SCHEDULED') {
-    return 'req-icon dispatched';
-  }
-  if (status === 'IN_PROGRESS') {
-    return 'req-icon in-progress';
-  }
-  if (status === 'RESOLVED') {
-    return 'req-icon resolved';
+  if (status === "RESOLVED") {
+    return "resident-request-icon resolved";
   }
 
-  return 'req-icon in-progress';
+  return "resident-request-icon in-progress";
 }
 
 function relativeTimeLabel(isoDate: string): string {
@@ -97,14 +82,16 @@ function relativeTimeLabel(isoDate: string): string {
   const diffHours = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60)));
 
   if (diffHours < 24) {
-    return `Created ${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+    return `Created ${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
   }
 
   const diffDays = Math.floor(diffHours / 24);
-  return `Created ${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+  return `Created ${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
 }
 
-async function getResidentDashboard(userId: string): Promise<ResidentDashboardResponse | null> {
+async function getResidentDashboard(
+  userId: string,
+): Promise<ResidentDashboardResponse | null> {
   try {
     return await fetchFromBackend<ResidentDashboardResponse>(
       `/api/dashboard/resident?userId=${encodeURIComponent(userId)}`,
@@ -115,14 +102,18 @@ async function getResidentDashboard(userId: string): Promise<ResidentDashboardRe
 }
 
 function renderQuickLaunchCard(item: ResidentQuickLaunchItem) {
-  const iconClass = item.id === 'maintenance' ? 'ql-icon bg-blue-muted' : item.id === 'new-ticket' ? 'ql-icon bg-blue' : 'ql-icon';
-  const icon = renderIcon(item.icon, 24);
-
   return (
-    <Link key={item.id} href={item.href} className={`card quick-launch-card ${item.id === 'new-ticket' ? 'ticket-card' : ''}`}>
-      <div className={iconClass}>{item.id === 'new-ticket' ? <Plus size={24} color="#fff" /> : icon}</div>
-      <h4 className="ql-title">{item.title}</h4>
-      <p className="ql-desc">{item.description}</p>
+    <Link
+      key={item.id}
+      href={item.href}
+      className={`quick-launch-card ${item.id === "new-ticket" ? "featured" : ""}`}
+    >
+      <div className="quick-launch-icon">{renderIcon(item.icon)}</div>
+      <div className="quick-launch-copy">
+        <h4>{item.title}</h4>
+        <p>{item.description}</p>
+      </div>
+      <span className="quick-launch-arrow">Open</span>
     </Link>
   );
 }
@@ -130,29 +121,31 @@ function renderQuickLaunchCard(item: ResidentQuickLaunchItem) {
 function renderPulseCard(item: ResidentCampusPulse) {
   if (item.imageUrl) {
     return (
-      <div key={item.id} className="card p-0 overflow-hidden mb-4 pulse-image-card">
-        <div className="pulse-image" style={{ backgroundImage: `url('${item.imageUrl}')` }}>
-          {item.tag ? <span className="pulse-badge">{item.tag}</span> : null}
+      <article key={item.id} className="pulse-story pulse-story-image">
+        <div
+          className="pulse-story-visual"
+          style={{ backgroundImage: `url('${item.imageUrl}')` }}
+        >
+          {item.tag ? <span className="badge badge-primary">{item.tag}</span> : null}
         </div>
-        <div className="p-4">
-          <h4 className="pulse-title">{item.title}</h4>
-          <p className="pulse-desc">{item.description}</p>
+        <div className="pulse-story-copy">
+          <h4>{item.title}</h4>
+          <p>{item.description}</p>
         </div>
-      </div>
+      </article>
     );
   }
 
-  const isWarning = item.type === 'warning';
   return (
-    <div key={item.id} className={`card pulse-card flex gap-4 items-start mb-4 ${isWarning ? 'warning' : ''}`}>
-      <div className={`pulse-icon ${isWarning ? 'orange' : ''}`}>
-        {isWarning ? <Zap size={20} /> : <UtensilsCrossed size={20} />}
+    <article key={item.id} className={`pulse-story ${item.type}`}>
+      <div className="pulse-story-copy">
+        <span className="pulse-story-label">
+          {item.type === "warning" ? "Maintenance notice" : "Campus update"}
+        </span>
+        <h4>{item.title}</h4>
+        <p>{item.description}</p>
       </div>
-      <div>
-        <h4 className="pulse-title">{item.title}</h4>
-        <p className="pulse-desc">{item.description}</p>
-      </div>
-    </div>
+    </article>
   );
 }
 
@@ -162,94 +155,152 @@ export default async function ResidentDashboard() {
 
   if (!dashboard) {
     return (
-      <main className="dashboard-container">
-        <div className="dashboard-main">
-          <section className="card">
-            <h2 className="welcome-title">Dashboard Unavailable</h2>
-            <p className="welcome-subtitle">We could not load resident data from the backend API.</p>
-          </section>
-        </div>
+      <main className="page-shell">
+        <section className="panel">
+          <h2 className="text-2xl mb-2">Resident Dashboard Unavailable</h2>
+          <p className="text-secondary">
+            We could not load resident data from the backend API.
+          </p>
+        </section>
       </main>
     );
   }
 
+  const firstName = dashboard.userName.split(" ")[0];
+  const seatLabel =
+    session.seatNumber && session.classroomNumber
+      ? `Seat ${session.seatNumber} · ${session.classroomNumber}`
+      : "Seating sync available from registrar import";
+
   return (
-    <main className="dashboard-container">
-      <div className="dashboard-main">
-        <section className="welcome-section flex justify-between items-center mb-8">
-          <div>
-            <h2 className="welcome-title">Welcome, <span className="text-blue">{dashboard.userName.split(' ')[0]}</span></h2>
-            <p className="welcome-subtitle">
-              Your campus command center is online. You have {dashboard.activeRequests} active <br/> 
-              maintenance tickets and {dashboard.upcomingBookings} upcoming facility booking{dashboard.upcomingBookings === 1 ? '' : 's'}.
-              <br />
-              {session.seatNumber && session.classroomNumber
-                ? `Exam seat ${session.seatNumber} in ${session.classroomNumber}.`
-                : 'Your student allocation is synced from the registrar import.'}
-            </p>
-          </div>
-          <div className="flex gap-4">
-            <div className="stat-card">
-              <div className="stat-label">ACTIVE REQUESTS</div>
-              <div className="stat-value">{String(dashboard.activeRequests).padStart(2, '0')}</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-label">UPCOMING</div>
-              <div className="stat-value">{String(dashboard.upcomingBookings).padStart(2, '0')}</div>
-            </div>
-          </div>
-        </section>
+    <main className="resident-page page-shell">
+      <section className="page-hero resident-hero panel animate-slide-up">
+        <div className="resident-hero-copy">
+          <div className="eyebrow">Resident Workspace</div>
+          <h1 className="page-title">Welcome back, {firstName}.</h1>
+          <p className="page-description">
+            Review your live request queue, verify your contest seating details,
+            and move from reporting an issue to tracking resolution in one
+            consistent workspace.
+          </p>
 
-        <section className="mb-8">
-          <h3 className="section-title">Quick Launch</h3>
-          <div className="quick-launch-grid">
-            {dashboard.quickLaunch.map((item) => renderQuickLaunchCard(item))}
+          <div className="resident-pill-row">
+            {session.enrollmentNumber ? (
+              <span className="pill">Enrollment {session.enrollmentNumber}</span>
+            ) : null}
+            <span className="pill pill-highlight">{seatLabel}</span>
           </div>
-        </section>
+        </div>
 
-        <section>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="section-title mb-0">Recent Requests</h3>
-            <Link href="/requests" className="text-xs text-secondary font-semibold hover:text-white uppercase tracking-wider">VIEW ALL</Link>
-          </div>
-          <div className="card requests-list flex-col gap-0 p-0">
+        <div className="resident-stat-grid">
+          <article className="resident-stat-card">
+            <span className="resident-stat-label">Active requests</span>
+            <strong>{String(dashboard.activeRequests).padStart(2, "0")}</strong>
+            <p>Tickets currently open or moving through dispatch.</p>
+          </article>
+          <article className="resident-stat-card">
+            <span className="resident-stat-label">Upcoming bookings</span>
+            <strong>{String(dashboard.upcomingBookings).padStart(2, "0")}</strong>
+            <p>Facility reservations still on your schedule.</p>
+          </article>
+          <article className="resident-stat-card">
+            <span className="resident-stat-label">Recent tickets</span>
+            <strong>{String(dashboard.recentRequests.length).padStart(2, "0")}</strong>
+            <p>Latest requests surfaced directly from the backend board.</p>
+          </article>
+        </div>
+      </section>
+
+      <div className="resident-layout">
+        <div className="resident-primary-stack">
+          <section className="panel animate-slide-up delay-100">
+            <div className="section-header">
+              <div>
+                <h3>Quick actions</h3>
+                <p>Start the task you need most often with one click.</p>
+              </div>
+            </div>
+
+            <div className="quick-launch-grid">
+              {dashboard.quickLaunch.map((item) => renderQuickLaunchCard(item))}
+            </div>
+          </section>
+
+          <section className="panel animate-slide-up delay-200">
+            <div className="section-header">
+              <div>
+                <h3>Recent requests</h3>
+                <p>Your newest tickets and the stage they are currently in.</p>
+              </div>
+              <Link href="/requests" className="section-link">
+                View all
+              </Link>
+            </div>
+
             {dashboard.recentRequests.length === 0 ? (
-              <div className="request-row flex items-center justify-between border-none">
+              <div className="resident-empty-state">
                 <div>
-                  <h5 className="req-title">No requests yet</h5>
-                  <p className="req-meta">Create your first maintenance or support ticket to start tracking it here.</p>
+                  <h4>No requests yet</h4>
+                  <p>
+                    Create your first maintenance or support request to start
+                    tracking it here.
+                  </p>
                 </div>
-                <Link href="/ticket/new" className="btn btn-primary">Raise Ticket</Link>
+                <Link href="/ticket/new" className="btn btn-primary">
+                  Raise ticket
+                </Link>
               </div>
             ) : (
-              dashboard.recentRequests.map((request, index) => {
-                const badge = statusBadge(request.status);
-                const iconClass = requestIconClass(request.status);
-                const rowClass = `request-row flex items-center justify-between ${index === dashboard.recentRequests.length - 1 ? 'border-none' : ''}`;
+              <div className="resident-request-list">
+                {dashboard.recentRequests.map((request, index) => {
+                  const badge = statusBadge(request.status);
 
-                return (
-                  <div key={request.requestId} className={rowClass}>
-                    <div className="flex items-center gap-4">
-                      <div className={iconClass}>{renderIcon(request.icon, 20)}</div>
-                      <div>
-                        <h5 className="req-title">{request.title}</h5>
-                        <p className="req-meta">Ticket #{request.ticketCode} • {relativeTimeLabel(request.createdAt)}</p>
+                  return (
+                    <article
+                      key={request.requestId}
+                      className={`resident-request-row ${
+                        index === dashboard.recentRequests.length - 1 ? "last" : ""
+                      }`}
+                    >
+                      <div className="resident-request-main">
+                        <div className={requestIconClass(request.status)}>
+                          {renderIcon(request.icon, 18)}
+                        </div>
+                        <div className="resident-request-copy">
+                          <h4>{request.title}</h4>
+                          <p>
+                            Ticket #{request.ticketCode} ·{" "}
+                            {relativeTimeLabel(request.createdAt)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <span className={badge.badgeClass}><span className={badge.dotClass}></span> {statusLabel(request.status)}</span>
-                  </div>
-                );
-              })
+                      <span className={badge.badgeClass}>
+                        <span className={badge.dotClass} />
+                        {request.status.replace(/_/g, " ")}
+                      </span>
+                    </article>
+                  );
+                })}
+              </div>
             )}
-          </div>
-        </section>
+          </section>
+        </div>
+
+        <aside className="resident-secondary-stack">
+          <section className="panel animate-slide-up delay-300">
+            <div className="section-header">
+              <div>
+                <h3>Operational brief</h3>
+                <p>Live campus notices and resident-facing service signals.</p>
+              </div>
+            </div>
+
+            <div className="pulse-stack">
+              {dashboard.campusPulse.map((item) => renderPulseCard(item))}
+            </div>
+          </section>
+        </aside>
       </div>
-
-      <aside className="dashboard-sidebar">
-        <h3 className="section-title">Campus Pulse</h3>
-
-        {dashboard.campusPulse.map((item) => renderPulseCard(item))}
-      </aside>
     </main>
   );
 }

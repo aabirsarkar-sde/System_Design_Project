@@ -109,7 +109,7 @@ async function main() {
       email: `${student.enrollmentNumber}@students.vanguard.local`,
       role: "STUDENT",
       avatarUrl: `https://i.pravatar.cc/150?u=${student.enrollmentNumber}`,
-      passwordHash: await hashPassword(student.enrollmentNumber.slice(0, 4), passwordCache),
+      passwordHash: await hashPassword(student.enrollmentNumber.slice(-4), passwordCache),
       serialNumber: student.serialNumber,
       seatNumber: student.seatNumber,
       classroomNumber: student.classroomNumber,
