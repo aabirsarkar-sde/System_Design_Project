@@ -1,8 +1,15 @@
+import { Instrument_Sans } from "next/font/google";
 import type { Metadata } from "next";
 import { getSiteBaseUrl } from "@/lib/env";
 import "./globals.css";
 
 const siteBaseUrl = getSiteBaseUrl();
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans-next",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteBaseUrl),
@@ -45,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={instrumentSans.variable}>
       <body>{children}</body>
     </html>
   );

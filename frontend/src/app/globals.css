@@ -14,9 +14,9 @@
   --text-tertiary: #8d9aa7;
   --text-on-dark: #f8f5ef;
 
-  --brand: #0f766e;
-  --brand-strong: #0b5f59;
-  --brand-soft: rgba(15, 118, 110, 0.12);
+  --brand: #007AD1;
+  --brand-strong: #003E74;
+  --brand-soft: rgba(0, 122, 209, 0.12);
   --accent: #b7791f;
   --accent-soft: rgba(183, 121, 31, 0.14);
   --danger: #b42318;
@@ -33,15 +33,14 @@
   --shadow-soft: 0 22px 50px rgba(24, 37, 49, 0.08);
   --shadow-card: 0 18px 38px rgba(24, 37, 49, 0.1);
   --shadow-shell: 0 40px 90px rgba(24, 37, 49, 0.16);
-  --shadow-focus: 0 0 0 4px rgba(15, 118, 110, 0.12);
+  --shadow-focus: 0 0 0 4px rgba(0, 122, 209, 0.12);
 
   --radius-sm: 14px;
   --radius-md: 22px;
   --radius-lg: 30px;
   --radius-xl: 40px;
 
-  --font-sans: "Aptos", "IBM Plex Sans", "Segoe UI Variable", "Trebuchet MS",
-    sans-serif;
+  --font-sans: var(--font-sans-next), "Instrument Sans", sans-serif;
   --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
 }
 
@@ -61,7 +60,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   background:
-    radial-gradient(circle at 12% 12%, rgba(15, 118, 110, 0.12), transparent 28%),
+    radial-gradient(circle at 12% 12%, rgba(0, 122, 209, 0.12), transparent 28%),
     radial-gradient(circle at 82% 18%, rgba(183, 121, 31, 0.14), transparent 24%),
     linear-gradient(180deg, #f8f3ea 0%, #f2eadf 46%, #efe7db 100%);
   -webkit-font-smoothing: antialiased;
@@ -140,8 +139,8 @@ ul {
   left: -6vw;
   background: radial-gradient(
     circle at 35% 35%,
-    rgba(15, 118, 110, 0.26),
-    rgba(15, 118, 110, 0)
+    rgba(0, 122, 209, 0.26),
+    rgba(0, 122, 209, 0)
   );
   animation: floatOrbOne 18s ease-in-out infinite alternate;
 }
@@ -190,10 +189,10 @@ ul {
   gap: 1.4rem;
   padding: 1.6rem 1.25rem 1.35rem;
   background:
-    linear-gradient(180deg, rgba(20, 33, 45, 0.98) 0%, rgba(25, 39, 53, 0.96) 100%);
+    linear-gradient(180deg, rgba(0, 62, 116, 0.98) 0%, rgba(0, 42, 85, 0.96) 100%);
   color: var(--text-on-dark);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 28px 0 60px rgba(12, 20, 28, 0.18);
+  box-shadow: 28px 0 60px rgba(0, 31, 64, 0.28);
   backdrop-filter: blur(20px);
 }
 
@@ -249,7 +248,7 @@ ul {
     rgba(255, 255, 255, 0.32),
     transparent 40%,
     transparent 70%,
-    rgba(15, 118, 110, 0.05)
+    rgba(0, 122, 209, 0.05)
   );
 }
 
@@ -329,7 +328,7 @@ ul {
 
 .pill-highlight {
   background: var(--brand-soft);
-  border-color: rgba(15, 118, 110, 0.18);
+  border-color: rgba(0, 122, 209, 0.18);
   color: var(--brand-strong);
 }
 
@@ -366,11 +365,11 @@ ul {
 .btn-primary {
   background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%);
   color: #f4f8f7;
-  box-shadow: 0 12px 26px rgba(15, 118, 110, 0.18);
+  box-shadow: 0 12px 26px rgba(0, 122, 209, 0.18);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 16px 30px rgba(15, 118, 110, 0.22);
+  box-shadow: 0 16px 30px rgba(0, 122, 209, 0.22);
 }
 
 .btn-outline {
@@ -400,7 +399,7 @@ ul {
 .badge-primary {
   color: var(--brand-strong);
   background: var(--brand-soft);
-  border-color: rgba(15, 118, 110, 0.16);
+  border-color: rgba(0, 122, 209, 0.16);
 }
 
 .badge-gray {
@@ -553,7 +552,7 @@ ul {
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: rgba(15, 118, 110, 0.34);
+  border-color: rgba(0, 122, 209, 0.34);
   box-shadow: var(--shadow-focus);
   background: #fff;
 }

@@ -61,7 +61,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <div className="brand-mark">VC</div>
+        <div className="brand-mark">NST</div>
         <div>
           <p className="brand-kicker">Campus Service Desk</p>
           <h1 className="brand-title">NST Operations</h1>
