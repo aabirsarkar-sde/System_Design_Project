@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  ADMIN
+}
+
+enum RequestCategory {
+  MAINTENANCE
+  IT_SUPPORT
+  HOUSEKEEPING
+  SECURITY
+  SUPPLIES
+}
+
+enum RequestPriority {
+  LOW
+  MEDIUM
+  HIGH
+  EMERGENCY
+}
+
+enum RequestStatus {
+  PENDING
+  DISPATCHED
+  IN_PROGRESS
+  SCHEDULED
+  RESOLVED
+}
+
+enum FacilityStatus {
+  OPERATIONAL
+  MAINTENANCE
+  OFFLINE
+}
+
+model User {
+  userId            String           @id @map("user_id") @db.VarChar(36)
+  enrollmentNumber  String?          @unique @map("enrollment_number") @db.VarChar(32)
+  name              String           @db.VarChar(120)
+  email             String           @unique @db.VarChar(160)
+  role              UserRole
+  avatarUrl         String           @map("avatar_url") @db.VarChar(255)
+  passwordHash      String           @map("password_hash") @db.VarChar(255)
+  serialNumber      Int?             @map("serial_number")
+  seatNumber        Int?             @map("seat_number")
+  classroomNumber   String?          @map("classroom_number") @db.VarChar(160)
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  serviceRequests   ServiceRequest[]
+  bookings          Booking[]
+  notifications     Notification[]
+
+  @@map("users")
+}
+
+model Facility {
+  facilityId     String         @id @map("facility_id") @db.VarChar(36)
+  name           String         @db.VarChar(120)
+  available      Boolean        @default(true)
+  status         FacilityStatus
+  location       String         @db.VarChar(120)
+  capacityLabel  String         @map("capacity_label") @db.VarChar(40)
+  hvacStatus     String         @map("hvac_status") @db.VarChar(40)
+  powerStatus    String?        @map("power_status") @db.VarChar(40)
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  bookings       Booking[]
+
+  @@map("facilities")
+}
+
+model ServiceRequest {
+  requestId         String           @id @default(uuid()) @map("request_id") @db.VarChar(36)
+  ticketCode        String           @unique @map("ticket_code") @db.VarChar(20)
+  title             String           @db.VarChar(120)
+  description       String           @db.Text
+  category          RequestCategory
+  building          String           @db.VarChar(100)
+  room              String           @db.VarChar(50)
+  priority          RequestPriority
+  status            RequestStatus    @default(PENDING)
+  commentCount      Int              @default(0) @map("comment_count")
+  attachmentCount   Int              @default(0) @map("attachment_count")
+  assigneeAvatarUrl String?          @map("assignee_avatar_url") @db.VarChar(255)
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  userId            String           @map("user_id") @db.VarChar(36)
+  user              User             @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("service_requests")
+}
+
+model Booking {
+  bookingId      String    @id @default(uuid()) @map("booking_id") @db.VarChar(36)
+  bookingDate    DateTime  @map("booking_date")
+  cancelled      Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  userId         String    @map("user_id") @db.VarChar(36)
+  facilityId     String    @map("facility_id") @db.VarChar(36)
+  user           User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  facility       Facility  @relation(fields: [facilityId], references: [facilityId], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+model Notification {
+  notificationId String    @id @default(uuid()) @map("notification_id") @db.VarChar(36)
+  message        String    @db.Text
+  sentAt         DateTime  @default(now()) @map("sent_at")
+  readAt         DateTime? @map("read_at")
+  userId         String    @map("user_id") @db.VarChar(36)
+  user           User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("notifications")
+}

@@ -22,4 +22,5 @@ export const env = {
   nodeEnv: requireEnv("NODE_ENV"),
   port: parsePort(requireEnv("PORT")),
   frontendOrigin: requireEnv("FRONTEND_ORIGIN"),
+  databaseUrl: requireEnv("DATABASE_URL"),
 };
