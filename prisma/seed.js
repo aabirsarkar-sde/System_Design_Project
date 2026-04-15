@@ -106,7 +106,7 @@ async function main() {
       userId: student.enrollmentNumber,
       enrollmentNumber: student.enrollmentNumber,
       name: student.name,
-      email: `${student.enrollmentNumber}@students.vanguard.local`,
+      email: `${student.enrollmentNumber}@students.nst.local`,
       role: "STUDENT",
       avatarUrl: `https://i.pravatar.cc/150?u=${student.enrollmentNumber}`,
       passwordHash: await hashPassword(student.enrollmentNumber.slice(-4), passwordCache),

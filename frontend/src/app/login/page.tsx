@@ -39,7 +39,7 @@ export default async function LoginPage() {
     <main className="login-page">
       <div className="login-stage animate-fade-in">
         <section className="login-showcase">
-          <div className="eyebrow">Vanguard Campus Operations</div>
+          <div className="eyebrow">NST Operations</div>
           <h2>Professional service workflows for students, facilities, and contest support.</h2>
           <p>
             This workspace is designed for fast issue reporting, clearer

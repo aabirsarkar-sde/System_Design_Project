@@ -14,8 +14,8 @@ const instrumentSans = Instrument_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(siteBaseUrl),
   title: {
-    default: "Vanguard Campus Operations",
-    template: "%s | Vanguard Campus Operations",
+    default: "NST Campus Operations",
+    template: "%s | NST Campus Operations",
   },
   description:
     "Secure campus service management platform for requests, analytics, facilities operations, and student support.",
@@ -26,21 +26,21 @@ export const metadata: Metadata = {
     "campus analytics",
     "technical operations dashboard",
   ],
-  applicationName: "Vanguard Campus Operations",
+  applicationName: "NST Campus Operations",
   robots: {
     index: true,
     follow: true,
   },
   openGraph: {
-    title: "Vanguard Campus Operations",
+    title: "NST Campus Operations",
     description:
       "Real-time operations platform for campus service workflows, student support, and facilities visibility.",
     type: "website",
-    siteName: "Vanguard Campus Operations",
+    siteName: "NST Campus Operations",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vanguard Campus Operations",
+    title: "NST Campus Operations",
     description:
       "Real-time operations platform for campus service workflows, student support, and facilities visibility.",
   },

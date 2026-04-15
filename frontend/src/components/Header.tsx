@@ -118,7 +118,7 @@ export default async function Header() {
             <Image
               src={
                 activeUser?.avatarUrl ??
-                "https://i.pravatar.cc/150?u=vanguard-guest"
+                "https://i.pravatar.cc/150?u=nst-guest"
               }
               alt={activeUser?.name ?? "Guest user"}
               width={44}

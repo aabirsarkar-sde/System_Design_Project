@@ -187,13 +187,14 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
-  padding: 1.6rem 1.25rem 1.35rem;
+  padding: 1.6rem 1.25rem 5rem;
   background:
     linear-gradient(180deg, rgba(0, 62, 116, 0.98) 0%, rgba(0, 42, 85, 0.96) 100%);
   color: var(--text-on-dark);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 28px 0 60px rgba(0, 31, 64, 0.28);
   backdrop-filter: blur(20px);
+  overflow-y: auto;
 }
 
 .main-content {
