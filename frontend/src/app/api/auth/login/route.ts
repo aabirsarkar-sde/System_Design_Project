@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify(payload),
       cache: "no-store",
+      signal: AbortSignal.timeout(15_000),
     });
 
     const data = (await response.json().catch(() => ({

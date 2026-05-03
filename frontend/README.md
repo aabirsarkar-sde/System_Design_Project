@@ -13,10 +13,10 @@ cp .env.example .env.local
 Required variables:
 
 - `BACKEND_API_BASE_URL` (example: `http://localhost:4000`)
-- `SITE_BASE_URL` (example: `http://localhost:3000`)
+- `SITE_BASE_URL` (example: `http://localhost:8000`)
 - `SESSION_SECRET` for production session signing
 
-`BACKEND_API_BASE_URL` and `SITE_BASE_URL` are required in production and validated at runtime for server-side fetches and metadata generation. In local development they fall back to `http://localhost:4000` and `http://localhost:3000`.
+`BACKEND_API_BASE_URL` and `SITE_BASE_URL` are required in production and validated at runtime for server-side fetches and metadata generation. In local development they fall back to `http://localhost:4000` and `http://localhost:8000`.
 
 ## Run
 
@@ -27,7 +27,13 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:8000`.
+
+The default dev command uses **webpack** (`next dev --webpack`) because Turbopack can show a blank page in some setups. To try Turbopack instead: `pnpm run dev:turbo`.
+
+Quick check: `http://localhost:8000/health` should return plain text `ok`. If that works but pages are blank, open the browser devtools **Console** for errors.
+
+If the page is blank, check the dev terminal for a warning that Next.js picked the wrong **workspace root** (often caused by a stray `package-lock.json` in a parent folder, e.g. your home directory). This project pins `turbopack.root` in `next.config.ts` to avoid that; removing the extra lockfile also helps.
 
 ## Authentication
 

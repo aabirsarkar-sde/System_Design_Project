@@ -2,11 +2,19 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["sharp", "unrs-resolver"]
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack -p 8000",
+    "dev:turbo": "next dev --turbopack -p 8000",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start -p 8000",
+    "lint": "eslint",
+    "deploy": "npx vercel@latest deploy --prod"
   },
   "dependencies": {
     "lucide-react": "^1.8.0",

@@ -10,7 +10,7 @@ export async function GET(): Promise<NextResponse> {
 
   const response = await fetch(
     `${getBackendApiBaseUrl()}/api/notifications?userId=${encodeURIComponent(session.userId)}`,
-    { cache: "no-store" },
+    { cache: "no-store", signal: AbortSignal.timeout(15_000) },
   );
 
   const data = await response.json().catch(() => ({ message: "Request failed" }));

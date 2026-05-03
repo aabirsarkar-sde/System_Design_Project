@@ -11,6 +11,10 @@ dotenv.config();
 const prisma = new PrismaClient();
 const DEFAULT_CSV_PATH = "/Users/anugragupta/Downloads/Seating Plan for DVA Contest 3 - Sheet1.csv";
 
+/** Must match sole-admin checks in `src/server.ts` and `frontend/src/lib/auth/admin.ts`. */
+const SOLE_ADMIN_ENROLLMENT = "2401010085";
+const SOLE_ADMIN_PASSWORD = "1234";
+
 function resolveCsvPath() {
   const configuredPath = process.env.STUDENTS_CSV_PATH || DEFAULT_CSV_PATH;
   const absolutePath = path.resolve(configuredPath);
@@ -102,6 +106,10 @@ async function main() {
 
   const studentUsers = [];
   for (const student of students) {
+    if (student.enrollmentNumber === SOLE_ADMIN_ENROLLMENT) {
+      continue;
+    }
+
     studentUsers.push({
       userId: student.enrollmentNumber,
       enrollmentNumber: student.enrollmentNumber,
@@ -116,14 +124,14 @@ async function main() {
     });
   }
 
-  const adminUser = {
-    userId: "A001",
-    enrollmentNumber: "ADMIN001",
-    name: "Priya Rao",
-    email: "priya.rao@campus.edu",
+  const soleAdminUser = {
+    userId: SOLE_ADMIN_ENROLLMENT,
+    enrollmentNumber: SOLE_ADMIN_ENROLLMENT,
+    name: "Campus Administrator",
+    email: `${SOLE_ADMIN_ENROLLMENT}@students.nst.local`,
     role: "ADMIN",
-    avatarUrl: "https://i.pravatar.cc/150?u=a001",
-    passwordHash: await hashPassword("ADMI", passwordCache),
+    avatarUrl: `https://i.pravatar.cc/150?u=${SOLE_ADMIN_ENROLLMENT}`,
+    passwordHash: await hashPassword(SOLE_ADMIN_PASSWORD, passwordCache),
     serialNumber: null,
     seatNumber: null,
     classroomNumber: null,
@@ -368,7 +376,7 @@ async function main() {
   ]);
 
   await prisma.user.createMany({
-    data: [...studentUsers, adminUser],
+    data: [...studentUsers, soleAdminUser],
   });
 
   await prisma.facility.createMany({
@@ -388,7 +396,7 @@ async function main() {
   });
 
   console.log(
-    `Seeded ${studentUsers.length} students, 1 admin, ${facilities.length} facilities, ${requestFixtures.length} requests, ${bookings.length} bookings, and ${notifications.length} notifications from ${csvPath}.`,
+    `Seeded ${studentUsers.length} students, sole admin ${SOLE_ADMIN_ENROLLMENT}, ${facilities.length} facilities, ${requestFixtures.length} requests, ${bookings.length} bookings, and ${notifications.length} notifications from ${csvPath}.`,
   );
 }
 

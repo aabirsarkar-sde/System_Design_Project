@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBackendApiBaseUrl } from "@/lib/env";
+import { isSoleAdmin } from "@/lib/auth/admin";
 import { getSession } from "@/lib/auth/session";
 
 export async function PATCH(
@@ -11,11 +12,15 @@ export async function PATCH(
     return NextResponse.json({ message: "Authentication required" }, { status: 401 });
   }
 
+  if (!isSoleAdmin(session)) {
+    return NextResponse.json({ message: "Admin access denied" }, { status: 403 });
+  }
+
   const { requestId } = await context.params;
   const payload = await request.json();
 
   const response = await fetch(
-    `${getBackendApiBaseUrl()}/api/requests/${encodeURIComponent(requestId)}/status`,
+    `${getBackendApiBaseUrl()}/api/requests/${encodeURIComponent(requestId)}/status?userId=${encodeURIComponent(session.userId)}`,
     {
       method: "PATCH",
       headers: {
@@ -23,6 +28,7 @@ export async function PATCH(
       },
       body: JSON.stringify(payload),
       cache: "no-store",
+      signal: AbortSignal.timeout(15_000),
     },
   );
 

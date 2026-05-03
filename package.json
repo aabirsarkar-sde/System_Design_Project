@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Backend starter for a Campus Service Management System (TypeScript)",
   "main": "dist/server.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "prisma generate && tsc",
     "db:push": "prisma db push",
@@ -11,7 +14,10 @@
     "db:setup": "npm run db:push && npm run db:seed",
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "docker:compose": "docker compose up --build",
+    "deploy:vercel": "cd frontend && npx vercel@latest deploy --prod",
+    "render:validate": "render blueprints validate render.yaml"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

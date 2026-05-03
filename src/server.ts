@@ -6,6 +6,7 @@ import {
   RequestCategory,
   RequestPriority,
   RequestStatus,
+  UserRole,
 } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { env } from "./config/env";
@@ -27,6 +28,10 @@ import {
 } from "./lib/staticData";
 
 const app = express();
+
+if (env.nodeEnv === "production") {
+  app.set("trust proxy", 1);
+}
 
 app.disable("x-powered-by");
 app.use(
@@ -68,12 +73,30 @@ function asyncHandler(handler: AsyncRouteHandler) {
   };
 }
 
+/** Only this user (enrollment + ADMIN role) may use admin dashboard APIs. */
+const SOLE_ADMIN_ENROLLMENT = "2401010085";
+
 function ensureUserId(userId: unknown): string {
   if (typeof userId !== "string" || userId.trim().length === 0) {
     throw new HttpError(400, "userId is required");
   }
 
   return userId.trim();
+}
+
+async function assertSoleAdmin(userId: string): Promise<void> {
+  const user = await prisma.user.findUnique({
+    where: { userId },
+    select: { enrollmentNumber: true, role: true },
+  });
+
+  if (
+    !user ||
+    user.enrollmentNumber !== SOLE_ADMIN_ENROLLMENT ||
+    user.role !== UserRole.ADMIN
+  ) {
+    throw new HttpError(403, "Admin access denied");
+  }
 }
 
 function asIsoDate(date: Date): string {
@@ -473,7 +496,10 @@ app.get(
 
 app.get(
   "/api/dashboard/admin",
-  asyncHandler(async (_req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = ensureUserId(req.query.userId);
+    await assertSoleAdmin(userId);
+
     const now = new Date();
     const requests = await prisma.serviceRequest.findMany({
       include: {
@@ -792,6 +818,9 @@ app.post(
 app.patch(
   "/api/requests/:requestId/status",
   asyncHandler(async (req: Request, res: Response) => {
+    const adminUserId = ensureUserId(req.query.userId);
+    await assertSoleAdmin(adminUserId);
+
     const rawRequestId = req.params.requestId;
     const requestId =
       typeof rawRequestId === "string" ? rawRequestId.trim() : "";

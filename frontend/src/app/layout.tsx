@@ -1,18 +1,17 @@
-import { Instrument_Sans } from "next/font/google";
 import type { Metadata } from "next";
 import { getSiteBaseUrl } from "@/lib/env";
 import "./globals.css";
 
-const siteBaseUrl = getSiteBaseUrl();
-
-const instrumentSans = Instrument_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans-next",
-  display: "swap",
-});
+function metadataBaseUrl(): URL {
+  try {
+    return new URL(getSiteBaseUrl());
+  } catch {
+    return new URL("http://localhost:8000");
+  }
+}
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteBaseUrl),
+  metadataBase: metadataBaseUrl(),
   title: {
     default: "NST Campus Operations",
     template: "%s | NST Campus Operations",
@@ -52,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={instrumentSans.variable}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

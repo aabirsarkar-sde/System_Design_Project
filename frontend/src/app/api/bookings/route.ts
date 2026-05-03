@@ -20,6 +20,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       userId: session.userId,
     }),
     cache: "no-store",
+    signal: AbortSignal.timeout(15_000),
   });
 
   const data = await response.json().catch(() => ({ message: "Request failed" }));

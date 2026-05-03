@@ -86,7 +86,7 @@ Backend default local URL (from example env): `http://localhost:4000`
 - `POST /api/auth/login`
 - `GET /api/header/me?userId=...`
 - `GET /api/dashboard/resident?userId=...`
-- `GET /api/dashboard/admin`
+- `GET /api/dashboard/admin?userId=...` (sole admin user only; returns 403 otherwise)
 - `GET /api/analytics`
 - `GET /api/facilities`
 - `GET /api/requests/board?userId=...`
@@ -96,3 +96,7 @@ Backend default local URL (from example env): `http://localhost:4000`
 ## Frontend
 
 See [frontend/README.md](frontend/README.md) for frontend environment and run instructions.
+
+## Production
+
+See [DEPLOY.md](DEPLOY.md) for environment variables, request flow (Next ↔ API ↔ DB), Docker Compose, and a release checklist.

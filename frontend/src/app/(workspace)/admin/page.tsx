@@ -13,7 +13,9 @@ import {
 } from "lucide-react";
 import AdminRequestStatusAction from "@/components/AdminRequestStatusAction";
 import { fetchFromBackend } from "@/lib/api/server";
+import { isSoleAdmin } from "@/lib/auth/admin";
 import { requireSession } from "@/lib/auth/session";
+import { redirect } from "next/navigation";
 import type {
   AdminDashboardResponse,
   AdminEvent,
@@ -82,9 +84,13 @@ function eventTone(event: AdminEvent): string {
   return "new";
 }
 
-async function getAdminDashboard(): Promise<AdminDashboardResponse | null> {
+async function getAdminDashboard(
+  userId: string,
+): Promise<AdminDashboardResponse | null> {
   try {
-    return await fetchFromBackend<AdminDashboardResponse>("/api/dashboard/admin");
+    return await fetchFromBackend<AdminDashboardResponse>(
+      `/api/dashboard/admin?userId=${encodeURIComponent(userId)}`,
+    );
   } catch {
     return null;
   }
@@ -155,8 +161,12 @@ function queueRow(item: AdminQueueItem, isLast: boolean) {
 }
 
 export default async function AdminDashboard() {
-  await requireSession();
-  const dashboard = await getAdminDashboard();
+  const session = await requireSession();
+  if (!isSoleAdmin(session)) {
+    redirect("/");
+  }
+
+  const dashboard = await getAdminDashboard(session.userId);
 
   if (!dashboard) {
     return (

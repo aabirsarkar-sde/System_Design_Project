@@ -39,28 +39,22 @@ export default async function Header() {
   const isLoggedIn = Boolean(session);
   const isApiOnline = Boolean(health?.ok);
 
-  const statusCopy = isApiOnline
-    ? "Backend connected"
-    : "Backend unreachable";
-
-  const subheading = activeUser?.seatNumber && activeUser.classroomNumber
-    ? `Seat ${activeUser.seatNumber} in ${activeUser.classroomNumber}`
-    : isLoggedIn
-      ? "Live service dashboards and request workflows are available."
-      : "Sign in to access the student workspace and service console.";
+  const seatLine =
+    activeUser?.seatNumber && activeUser.classroomNumber
+      ? `Seat ${activeUser.seatNumber} · ${activeUser.classroomNumber}`
+      : null;
 
   return (
     <header className="header">
       <div className="header-intro">
-        <span className="header-kicker">Campus Service Management</span>
         <div className="header-title-row">
-          <h2>Operational Control Center</h2>
+          <h2>Service</h2>
           <div className={`header-health ${isApiOnline ? "online" : "offline"}`}>
             <span className="header-health-dot" aria-hidden="true" />
-            {statusCopy}
+            {isApiOnline ? "Online" : "Offline"}
           </div>
         </div>
-        <p>{subheading}</p>
+        {seatLine ? <p className="header-subtle">{seatLine}</p> : null}
       </div>
 
       <div className="header-actions">
@@ -121,8 +115,8 @@ export default async function Header() {
                 "https://i.pravatar.cc/150?u=nst-guest"
               }
               alt={activeUser?.name ?? "Guest user"}
-              width={44}
-              height={44}
+              width={36}
+              height={36}
             />
           </div>
         </div>

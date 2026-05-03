@@ -69,7 +69,9 @@ export default function AdminRequestStatusAction({ requestId, currentStatus }: A
         <select
           className="admin-status-select"
           value={coerceStatus(selected)}
-          onChange={(event) => setSelected(event.target.value)}
+          onChange={(event) =>
+            setSelected(coerceStatus(event.target.value))
+          }
           disabled={isPending}
           aria-label="Request status"
         >

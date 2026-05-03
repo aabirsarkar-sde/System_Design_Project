@@ -1,0 +1,23 @@
+# Render Blueprint — deploy the Express API from this repo root.
+# After first deploy, set secrets in the Render Dashboard:
+#   DATABASE_URL, FRONTEND_ORIGIN (your Vercel URL origin, no trailing slash)
+#
+# PORT is injected by Render (default 10000). Do not hardcode unless required.
+
+services:
+  - type: web
+    name: campus-service-api
+    runtime: node
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false

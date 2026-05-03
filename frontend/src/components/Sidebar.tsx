@@ -55,24 +55,31 @@ function isItemActive(pathname: string, matches: string[]): boolean {
   );
 }
 
-export default function Sidebar() {
+type SidebarProps = {
+  showAdminNav?: boolean;
+};
+
+export default function Sidebar({ showAdminNav = false }: SidebarProps) {
   const pathname = usePathname();
+  const items = showAdminNav
+    ? navigationItems
+    : navigationItems.filter((item) => item.href !== "/admin");
 
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="brand-mark">NST</div>
         <div>
-          <p className="brand-kicker">Campus Service Desk</p>
-          <h1 className="brand-title">NST Operations</h1>
+          <p className="brand-kicker">Campus</p>
+          <h1 className="brand-title">Service desk</h1>
         </div>
       </div>
 
-      <div className="sidebar-section-label">Workspaces</div>
+      <div className="sidebar-section-label">Navigate</div>
 
       <nav className="sidebar-nav" aria-label="Primary">
         <ul>
-          {navigationItems.map((item) => {
+          {items.map((item) => {
             const Icon = item.icon;
             const active = isItemActive(pathname, item.matches);
 
@@ -80,10 +87,11 @@ export default function Sidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  title={item.description}
                   className={`nav-item ${active ? "active" : ""}`}
                 >
                   <span className="nav-icon">
-                    <Icon size={18} />
+                    <Icon size={17} strokeWidth={1.75} />
                   </span>
                   <span className="nav-copy">
                     <strong>{item.label}</strong>
@@ -96,19 +104,6 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      <div className="sidebar-brief">
-        <span className="sidebar-brief-label">Today&apos;s focus</span>
-        <h2>Keep student support visible, calm, and moving.</h2>
-        <p>
-          Resident, requests, facilities, and analytics now work as one
-          coordinated operational flow.
-        </p>
-      </div>
-
-      <div className="sidebar-footer">
-        <span className="sidebar-status-dot" aria-hidden="true" />
-        Contest service environment ready
-      </div>
     </aside>
   );
 }

@@ -2,7 +2,7 @@ import "server-only";
 
 const devDefaults: Record<string, string> = {
   BACKEND_API_BASE_URL: "http://localhost:4000",
-  SITE_BASE_URL: "http://localhost:3000",
+  SITE_BASE_URL: "http://localhost:8000",
 };
 
 function requireEnv(name: string): string {
