@@ -23,7 +23,22 @@ export function getBackendApiBaseUrl(): string {
   return url.replace(/\/+$/, "");
 }
 
+/** Public origin (no trailing slash). Uses `VERCEL_URL` when `SITE_BASE_URL` is unset (Vercel build/runtime). */
 export function getSiteBaseUrl(): string {
-  const url = requireEnv("SITE_BASE_URL").trim();
-  return url.replace(/\/+$/, "");
+  const explicit = process.env.SITE_BASE_URL?.trim();
+  if (explicit) {
+    return explicit.replace(/\/+$/, "");
+  }
+
+  const vercelHost = process.env.VERCEL_URL?.trim();
+  if (vercelHost) {
+    const protocol = process.env.VERCEL === "1" ? "https" : "http";
+    return `${protocol}://${vercelHost}`.replace(/\/+$/, "");
+  }
+
+  if (process.env.NODE_ENV !== "production" && devDefaults.SITE_BASE_URL) {
+    return devDefaults.SITE_BASE_URL.replace(/\/+$/, "");
+  }
+
+  throw new Error("Missing required environment variable: SITE_BASE_URL");
 }
