@@ -78,6 +78,8 @@ npm run build
 npm start
 ```
 
+`npm start` runs **`prisma migrate deploy`** before the HTTP server so production databases stay in sync with `prisma/migrations/`. For local iteration you can still use **`npm run db:push`**.
+
 Backend default local URL (from example env): `http://localhost:4000`
 
 ## API Endpoints

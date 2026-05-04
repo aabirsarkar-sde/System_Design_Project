@@ -3,6 +3,7 @@
 #   DATABASE_URL, FRONTEND_ORIGIN (your Vercel URL origin, no trailing slash)
 #
 # PORT is injected by Render (default 10000). Do not hardcode unless required.
+# `npm start` runs `prisma migrate deploy` before the server (see package.json).
 
 services:
   - type: web

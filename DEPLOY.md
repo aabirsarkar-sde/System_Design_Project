@@ -61,13 +61,15 @@ Inside Compose, Next uses **`BACKEND_API_BASE_URL=http://api:4000`** for server-
 ## Option B: Split hosting (e.g. Vercel + API host)
 
 - Deploy **Next** to Vercel (or similar): set `SITE_BASE_URL`, `BACKEND_API_BASE_URL` (public API URL), `SESSION_SECRET`.
-- Run **Express** on a VM, Fly.io, Railway, etc.: set `FRONTEND_ORIGIN` to your Vercel domain, `DATABASE_URL`, `PORT`, `NODE_ENV=production`.
-- Run **`npx prisma migrate deploy`** or **`prisma db push`** against production DB from CI or a one-off job (not on every request).
+- Run **Express** on a VM, Fly.io, Railway, Render, etc.: set `FRONTEND_ORIGIN` to your Vercel domain, `DATABASE_URL`, `PORT`, `NODE_ENV=production`.
+- **`npm start`** runs **`prisma migrate deploy`** before listening, so a new database picks up `prisma/migrations` automatically. For ad-hoc scripts you can still run **`npm run db:migrate:deploy`** or **`npm run db:push`**.
 
 ## Database
 
 - **Neon** / managed Postgres: use the provided connection string; often `?sslmode=require`.
-- After first deploy: `npm run db:push` (schema) and optional `npm run db:seed` (dev/test data only — **do not** run seed on production with real user data without review).
+- **Fresh database:** migrations apply on **`npm start`** (Docker, Render, etc.).
+- **Existing database** (tables were created earlier with `db push` only): follow Prisma [baselining](https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/baselining); if the schema already matches, you can mark the initial migration applied with `npx prisma migrate resolve --applied 20260505120000_init`.
+- Optional seed: `npm run db:seed` (dev/test data only — **do not** run seed on production with real user data without review).
 
 ## Health checks
 
