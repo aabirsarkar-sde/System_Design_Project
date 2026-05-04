@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const { PrismaClient, UserRole } = require("@prisma/client");
 const dotenv = require("dotenv");
 
-dotenv.config();
+dotenv.config({ override: true });
 
 const prisma = new PrismaClient();
 

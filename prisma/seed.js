@@ -6,7 +6,8 @@ const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("@prisma/client");
 const dotenv = require("dotenv");
 
-dotenv.config();
+// Prefer `.env` over a stale `DATABASE_URL` exported in the shell (default dotenv does not override).
+dotenv.config({ override: true });
 
 const prisma = new PrismaClient();
 const DEFAULT_CSV_PATH = "/Users/anugragupta/Downloads/Seating Plan for DVA Contest 3 - Sheet1.csv";
